@@ -1,3 +1,17 @@
+# React Data Dashboard
+
+React + TypeScript + Vite app for a data-heavy trading-style dashboard (TanStack Query, TanStack Table, etc.).
+
+## Testing
+
+- Install dependencies: `npm install`
+- Watch mode: `npm test`
+- Single run (CI / verification): `npm run test:run`
+
+Tests use [Vitest](https://vitest.dev) with a `jsdom` environment, [Testing Library](https://testing-library.com) for components, and a small [jest-dom](https://github.com/testing-library/jest-dom) setup in `vitest.setup.ts` at the repo root (next to `vite.config.ts`).
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
