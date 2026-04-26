@@ -3,7 +3,7 @@ import { getTrades } from '@api';
 import { sideLabel } from './utils';
 
 function App() {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['trades'],
     queryFn: getTrades,
   });
@@ -13,7 +13,12 @@ function App() {
 
   return (
     <main>
-      <h1>React Data Dashboard</h1>
+      <header>
+        <h1>React Data Dashboard</h1>
+        <button type="button" onClick={() => void refetch()}>
+          Refresh trades
+        </button>
+      </header>
 
       <ul>
         {data?.map((trade) => (

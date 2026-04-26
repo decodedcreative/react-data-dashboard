@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Trade } from '@types'
 import { getTrades } from '@api'
@@ -55,5 +56,24 @@ describe('App', () => {
     expect(screen.getByText(/AAPL/)).toBeInTheDocument()
     expect(screen.getByText(/— Buy —/)).toBeInTheDocument()
     expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1)
+  })
+
+  it('refetches trades when the user clicks Refresh trades', async () => {
+    const user = userEvent.setup()
+    renderWithProvider()
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: 'Refresh trades' }),
+      ).toBeInTheDocument()
+    })
+
+    expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1)
+
+    await user.click(screen.getByRole('button', { name: 'Refresh trades' }))
+
+    await waitFor(() => {
+      expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(2)
+    })
   })
 })
