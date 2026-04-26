@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getTrades } from '@api';
+import { sideLabel } from './utils';
 
 function App() {
   const { data, isLoading, error } = useQuery({
@@ -17,7 +18,7 @@ function App() {
       <ul>
         {data?.map((trade) => (
           <li key={trade.id}>
-            {trade.symbol} — {trade.side} — {trade.quantity}
+            {trade.symbol} — {sideLabel(trade.side)} — {trade.quantity}
           </li>
         ))}
       </ul>
