@@ -1,10 +1,10 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { Trade } from '@types'
-import { getTrades } from '@api'
-import App from './App'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Trade } from '@types';
+import { getTrades } from '@api';
+import App from './App';
 
 const mockTrades: Trade[] = [
   {
@@ -17,63 +17,63 @@ const mockTrades: Trade[] = [
     trader: 'James Howell',
     executedAt: '2026-04-24T10:15:00Z',
   },
-]
+];
 
 vi.mock('@api', () => ({
   getTrades: vi.fn(),
-}))
+}));
 
 function createTestQueryClient() {
   return new QueryClient({
     defaultOptions: { queries: { retry: false } },
-  })
+  });
 }
 
 function renderWithProvider() {
   return render(
     <QueryClientProvider client={createTestQueryClient()}>
       <App />
-    </QueryClientProvider>,
-  )
+    </QueryClientProvider>
+  );
 }
 
 describe('App', () => {
   beforeEach(() => {
-    vi.mocked(getTrades).mockReset()
-    vi.mocked(getTrades).mockImplementation(() => Promise.resolve(mockTrades))
-  })
+    vi.mocked(getTrades).mockReset();
+    vi.mocked(getTrades).mockImplementation(() => Promise.resolve(mockTrades));
+  });
 
   it('renders the dashboard and listed trades after data loads', async () => {
-    renderWithProvider()
-    expect(screen.getByText('Loading trades...')).toBeInTheDocument()
+    renderWithProvider();
+    expect(screen.getByText('Loading trades...')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(
-        screen.getByRole('heading', { name: 'React Data Dashboard' }),
-      ).toBeInTheDocument()
-    })
+        screen.getByRole('heading', { name: 'React Data Dashboard' })
+      ).toBeInTheDocument();
+    });
 
-    expect(screen.getByText(/AAPL/)).toBeInTheDocument()
-    expect(screen.getByText(/— Buy —/)).toBeInTheDocument()
-    expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1)
-  })
+    expect(screen.getByText(/AAPL/)).toBeInTheDocument();
+    expect(screen.getByText(/— Buy —/)).toBeInTheDocument();
+    expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1);
+  });
 
   it('refetches trades when the user clicks Refresh trades', async () => {
-    const user = userEvent.setup()
-    renderWithProvider()
+    const user = userEvent.setup();
+    renderWithProvider();
 
     await waitFor(() => {
       expect(
-        screen.getByRole('button', { name: 'Refresh trades' }),
-      ).toBeInTheDocument()
-    })
+        screen.getByRole('button', { name: 'Refresh trades' })
+      ).toBeInTheDocument();
+    });
 
-    expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1)
+    expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1);
 
-    await user.click(screen.getByRole('button', { name: 'Refresh trades' }))
+    await user.click(screen.getByRole('button', { name: 'Refresh trades' }));
 
     await waitFor(() => {
-      expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(2)
-    })
-  })
-})
+      expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(2);
+    });
+  });
+});

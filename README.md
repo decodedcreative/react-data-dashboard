@@ -10,6 +10,20 @@ React + TypeScript + Vite app for a data-heavy trading-style dashboard (TanStack
 
 Tests use [Vitest](https://vitest.dev) with a `jsdom` environment, [Testing Library](https://testing-library.com) for components, and a small [jest-dom](https://github.com/testing-library/jest-dom) setup in `vitest.setup.ts` at the repo root (next to `vite.config.ts`).
 
+## Formatting
+
+[Prettier](https://prettier.io) is configured in `.prettierrc` with [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) so ESLint does not re-enforce style rules that Prettier owns.
+
+- Write formatting: `npm run format`
+- Check only (e.g. CI): `npm run format:check`
+
+In VS Code or Cursor, set **Prettier** as the default formatter for TypeScript/JSON if you want format-on-save; the repo ignores `package-lock.json` and build output in `.prettierignore`.
+
+## Quality checks
+
+- **All in one (serial):** `npm run verify` — runs **ESLint**, then **TypeScript** (`tsc -b --noEmit`), then **Vitest** (`test:run`).
+- **TypeScript only:** `npm run typecheck` (no Vite bundle; use `npm run build` for a full production build).
+
 ---
 
 # React + TypeScript + Vite
@@ -54,15 +68,15 @@ export default defineConfig([
       // other options...
     },
   },
-])
+]);
 ```
 
 You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
 ```js
 // eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+import reactX from 'eslint-plugin-react-x';
+import reactDom from 'eslint-plugin-react-dom';
 
 export default defineConfig([
   globalIgnores(['dist']),
@@ -83,5 +97,5 @@ export default defineConfig([
       // other options...
     },
   },
-])
+]);
 ```
