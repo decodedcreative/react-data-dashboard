@@ -1,1 +1,1 @@
-export { sideLabel } from './sideLabel'
+export { sideLabel } from './sideLabel';

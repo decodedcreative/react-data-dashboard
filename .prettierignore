@@ -1,0 +1,13 @@
+# Dependencies and build
+node_modules
+dist
+dist-ssr
+coverage
+*.tsbuildinfo
+
+# Lockfile (large, noisy diffs; formatting adds no value)
+package-lock.json
+
+# Minified and generated
+*.min.js
+*.min.css
