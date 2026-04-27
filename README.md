@@ -24,6 +24,17 @@ In VS Code or Cursor, set **Prettier** as the default formatter for TypeScript/J
 - **All in one (serial):** `npm run verify` — runs **ESLint**, then **TypeScript** (`tsc -b --noEmit`), then **Vitest** (`test:run`).
 - **TypeScript only:** `npm run typecheck` (no Vite bundle; use `npm run build` for a full production build).
 
+## Git hooks ([Husky](https://github.com/typicode/husky))
+
+After `npm install`, the **`prepare`** script installs hooks from `.husky/`.
+
+| Hook           | What runs                                                                                                                                             |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **pre-commit** | [lint-staged](https://github.com/lint-staged/lint-staged): **Prettier** then **ESLint** on staged `*.{ts,tsx}`; **Prettier** on staged `*.{json,md}`. |
+| **pre-push**   | `npm run verify` (lint + typecheck + tests).                                                                                                          |
+
+To skip hooks in an emergency only: `git commit --no-verify` or `git push --no-verify`. Prefer fixing the underlying issue instead of bypassing checks.
+
 ---
 
 # React + TypeScript + Vite
