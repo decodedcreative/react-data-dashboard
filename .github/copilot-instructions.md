@@ -11,7 +11,7 @@ The app should demonstrate strong front-end engineering judgement, including:
 - Clean React architecture
 - Type-safe TypeScript
 - Data fetching with TanStack Query
-- Data tables with TanStack Table
+- Data tables with AG Grid (Community) or TanStack Table where appropriate
 - Scalable feature-based folder structure
 - Accessible, usable UI
 - Sensible handling of loading, error and empty states
@@ -25,17 +25,14 @@ Prefer:
 
 - React
 - TypeScript
-- Vite
+- Next.js (App Router)
 - TanStack Query
-- TanStack Table
+- AG Grid Community (data grid)
 - Zod (for runtime validation where useful)
-
-Avoid introducing large frameworks unless explicitly required.
 
 Avoid:
 
 - Redux unless there is genuine complex client-side state
-- Next.js (this is a client-side app for now)
 - Over-engineered abstractions
 - Premature generic components
 
@@ -47,6 +44,10 @@ Use a feature-based structure:
 
 ```txt
 src/
+  app/
+    layout.tsx
+    page.tsx
+    providers.tsx
   api/
   features/
     trades/
@@ -56,7 +57,6 @@ src/
       types.ts
   types/
   App.tsx
-  main.tsx
 ```
 
 Guidelines:

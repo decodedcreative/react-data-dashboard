@@ -1,3 +1,5 @@
+'use client';
+
 import { useQuery } from '@tanstack/react-query';
 import { getTrades } from '@api';
 import { sideLabel } from './utils';
