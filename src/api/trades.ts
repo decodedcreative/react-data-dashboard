@@ -1,6 +1,6 @@
 import type { Trade } from '@types';
 
-const trades: Trade[] = [
+const tradesSeed: Trade[] = [
   {
     id: 'TRD-001',
     symbol: 'AAPL',
@@ -23,7 +23,16 @@ const trades: Trade[] = [
   },
 ];
 
-export async function getTrades(): Promise<Trade[]> {
+async function delay(): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, 600));
-  return trades;
+}
+
+export async function getTrades(): Promise<Trade[]> {
+  await delay();
+  return tradesSeed.map((t) => ({ ...t }));
+}
+
+/** Single-trade lookup — no artificial delay so detail navigation stays snappy. */
+export async function getTradeById(id: string): Promise<Trade | undefined> {
+  return tradesSeed.find((t) => t.id === id);
 }
