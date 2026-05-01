@@ -1,3 +1,14 @@
+/*
+  Global styles entry (imported from src/app/layout.tsx).
+
+  Tailwind CSS (separate ticket): add the Tailwind directives here, e.g. v4-style
+    @import "tailwindcss";
+  plus any `@layer base`, `@theme`, or project-specific tokens as needed.
+
+  Minimal baseline below avoids unstyled-browser defaults until Tailwind Preflight lands;
+  trim overlap with Preflight when you add Tailwind.
+*/
+
 *,
 *::before,
 *::after {

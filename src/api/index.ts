@@ -1,1 +1,1 @@
-export { getTrades } from './trades';
+export { getTrades, getTradeById } from './trades';

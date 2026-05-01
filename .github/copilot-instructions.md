@@ -55,8 +55,9 @@ src/
       hooks/
       utils/
       types.ts
+  shared/
+    components/
   types/
-  App.tsx
 ```
 
 Guidelines:

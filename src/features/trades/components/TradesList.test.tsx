@@ -4,7 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Trade } from '@types';
 import { getTrades } from '@api';
-import App from './App';
+
+import { TradesList } from './TradesList';
 
 const mockTrades: Trade[] = [
   {
@@ -32,24 +33,24 @@ function createTestQueryClient() {
 function renderWithProvider() {
   return render(
     <QueryClientProvider client={createTestQueryClient()}>
-      <App />
+      <TradesList />
     </QueryClientProvider>
   );
 }
 
-describe('App', () => {
+describe('TradesList', () => {
   beforeEach(() => {
     vi.mocked(getTrades).mockReset();
     vi.mocked(getTrades).mockImplementation(() => Promise.resolve(mockTrades));
   });
 
-  it('renders the dashboard and listed trades after data loads', async () => {
+  it('renders the trades list heading and listed trades after data loads', async () => {
     renderWithProvider();
     expect(screen.getByText('Loading trades...')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(
-        screen.getByRole('heading', { name: 'React Data Dashboard' })
+        screen.getByRole('heading', { name: 'Trades' })
       ).toBeInTheDocument();
     });
 
