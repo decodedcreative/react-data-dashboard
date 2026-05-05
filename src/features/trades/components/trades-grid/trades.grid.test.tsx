@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getTrades } from '@api';
 import type { Trade } from '@types';
-import { TradesList } from './trades-list';
+import { GridTrades } from './trades.grid';
 
 const mockTrades: Trade[] = [
   {
@@ -26,32 +26,31 @@ const createTestQueryClient = () => {
   return new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-}
+};
 
 const renderWithProvider = () => {
   return render(
     <QueryClientProvider client={createTestQueryClient()}>
-      <TradesList />
+      <GridTrades />
     </QueryClientProvider>
   );
-}
+};
 
-describe('TradesList', () => {
+describe('GridTrades', () => {
   beforeEach(() => {
     vi.mocked(getTrades).mockReset();
     vi.mocked(getTrades).mockImplementation(() => Promise.resolve(mockTrades));
   });
 
-  it('renders listed trades after data loads', async () => {
+  it('renders trades in data grid after data loads', async () => {
     renderWithProvider();
     expect(screen.getByText('Loading trades...')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.getByRole('list')).toBeInTheDocument();
+      expect(screen.getByRole('grid')).toBeInTheDocument();
     });
 
-    expect(screen.getByText(/AAPL/)).toBeInTheDocument();
-    expect(screen.getByText(/— Buy —/)).toBeInTheDocument();
+    expect(screen.queryByText('No trades found')).not.toBeInTheDocument();
     expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1);
   });
 

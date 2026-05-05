@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { sideLabel } from '../formatters/sideLabel';
+import { sideLabel } from '../formatters';
 
 const tradeForDetailRowsSchema = z.object({
   id: z.string(),

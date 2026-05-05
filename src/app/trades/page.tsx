@@ -1,6 +1,6 @@
 import { getTrades } from '@api';
-import { TradesList } from '@features/trades/components/trades-list';
-import { getClassNames } from '@lib/getClassNames';
+import { GridTrades } from '@features/trades/components/trades-grid';
+import { getClassNames } from '@lib/get-class-names';
 import classNames from './page.styles';
 
 const TradesPage = async () => {
@@ -12,7 +12,7 @@ const TradesPage = async () => {
       <header className={tradesPageClassNames.header}>
         <h1 className={tradesPageClassNames.title}>Trades</h1>
       </header>
-      <TradesList initialTrades={initialTrades} />
+      <GridTrades initialTrades={initialTrades} />
     </main>
   );
 };

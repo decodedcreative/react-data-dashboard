@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Trade } from '@types';
-import { toTradeDetailRows } from './toTradeDetailRows';
+import { toTradeDetailRows } from './to-trade-detail-rows';
 
 const mockTrade: Trade = {
   id: 'TRD-001',

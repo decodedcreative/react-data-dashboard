@@ -9,4 +9,4 @@ export const sideLabel = (side: 'buy' | 'sell'): string => {
   } as const;
 
   return labels[side];
-}
+};
