@@ -94,11 +94,10 @@ jobs:
           name: playwright-test-results
           path: ./test-results
 
-      # Playwright E2E archives only (no Storybook / no TurboSnap-only-changed).
-      - name: Publish to Chromatic
-        uses: chromaui/action@v13
-        with:
-          playwright: true
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+      # Use the repo’s chromatic (v16+) so Playwright archive layout matches @chromatic-com/playwright.
+      # chromaui/action@v13 bundled an older CLI that rejected these builds.
+      - name: Publish to Chromatic (Playwright archives)
+        run: npm run chromatic:e2e
         env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           CHROMATIC_ARCHIVE_LOCATION: ./test-results
