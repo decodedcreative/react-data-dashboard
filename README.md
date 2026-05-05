@@ -28,6 +28,8 @@ In CI, browser setup is performed with `npx playwright install --with-deps chrom
 
 ### Chromatic visual capture (Playwright)
 
+This project does **not** use Storybook; visual regression is **Playwright-only** via Chromatic’s E2E flow.
+
 E2E fixtures use `@chromatic-com/playwright` so Chromatic captures an archive for each Chromium test ([Playwright integration](https://www.chromatic.com/docs/playwright/)). Locally, plain `npm run test:e2e` still verifies behavior.
 
 To publish snapshots for review in Chromatic, add a Chromatic project token and run:

@@ -94,7 +94,8 @@ jobs:
           name: playwright-test-results
           path: ./test-results
 
-      - name: Run Chromatic E2E
+      # Playwright E2E archives only (no Storybook / no TurboSnap-only-changed).
+      - name: Publish to Chromatic
         uses: chromaui/action@v13
         with:
           playwright: true
