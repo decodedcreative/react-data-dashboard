@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
-
 import './globals.css';
-
-import { AppNav } from '@/shared/components/AppNav';
-
+import { Nav, NavLink } from '@shared/components/app-nav';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
@@ -11,19 +8,25 @@ export const metadata: Metadata = {
   description: 'Trade data explorer and dashboards',
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}) => {
   return (
     <html lang="en">
       <body>
         <Providers>
-          <AppNav />
+          <Nav>
+            <NavLink href="/">Home</NavLink>
+            <NavLink href="/trades">Trades</NavLink>
+            <NavLink href="/about">About</NavLink>
+          </Nav>
           {children}
         </Providers>
       </body>
     </html>
   );
 }
+
+export default RootLayout;
