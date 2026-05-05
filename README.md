@@ -24,7 +24,7 @@ Tests use [Vitest](https://vitest.dev) with a `jsdom` environment, [Testing Libr
 
 Playwright uses `playwright.config.ts` and runs tests from `e2e/`. By default it starts the Next.js app via `npm run dev`, runs Chromium, and records traces/screenshots/videos on failures or retries.
 
-In CI, browser setup is performed with `npx playwright install --with-deps chromium` before running `npm run test:e2e`.
+In CI, browser setup runs `npm run test:e2e:install:ci` (system deps via `--with-deps`) before `npm run test:e2e`. Locally, `npm run test:e2e:install` installs Chromium only (no `--with-deps`).
 
 ### Chromatic visual capture (Playwright)
 

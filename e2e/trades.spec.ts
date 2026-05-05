@@ -25,7 +25,7 @@ test.describe('trades page', () => {
 
     await takeNamedChromaticSnapshot(tradesPage.page, 'trade-detail-TRD-001', testInfo);
 
-    await tradesPage.backToTradesLink.click();
+    await tradeDetailPage.backToTradesLink.click();
     await expect(tradesPage.page).toHaveURL('/trades');
   });
 

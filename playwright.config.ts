@@ -1,7 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const port = Number(process.env.PORT ?? 3000);
-const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://localhost:${port}`;
+const parsedPort = Number(process.env.PORT);
+const port =
+  Number.isFinite(parsedPort) && parsedPort > 0 ? Math.trunc(parsedPort) : 3000;
+const explicitBaseURL = process.env.PLAYWRIGHT_BASE_URL;
+const baseURL = explicitBaseURL ?? `http://localhost:${port}`;
+const useExternalBaseURL = Boolean(explicitBaseURL);
 
 export default defineConfig({
   testDir: './e2e',
@@ -22,10 +26,14 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: {
-    command: 'npm run dev',
-    url: baseURL,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-  },
+  ...(useExternalBaseURL
+    ? {}
+    : {
+        webServer: {
+          command: 'npm run dev',
+          url: baseURL,
+          reuseExistingServer: !process.env.CI,
+          timeout: 120_000,
+        },
+      }),
 });

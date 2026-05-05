@@ -10,7 +10,16 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  { ignores: ['.next/**', 'dist/**', 'coverage/**'] },
+  {
+    ignores: [
+      '.next/**',
+      'dist/**',
+      'coverage/**',
+      'test-results/**',
+      'playwright-report/**',
+      'chromatic-archives/**',
+    ],
+  },
   ...compat.extends('next/core-web-vitals'),
   {
     rules: {

@@ -5,14 +5,12 @@ export class TradesPage {
   readonly heading: Locator;
   readonly aaplLink: Locator;
   readonly tslaText: Locator;
-  readonly backToTradesLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.heading = page.getByRole('heading', { name: 'Trades' });
     this.aaplLink = page.getByRole('link', { name: 'AAPL' });
     this.tslaText = page.getByText('TSLA');
-    this.backToTradesLink = page.getByRole('link', { name: '← Back to trades' });
   }
 
   async goto() {

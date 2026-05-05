@@ -49,7 +49,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: npm run test:e2e:install:ci
 
       - name: E2E tests
         run: npm run test:e2e
@@ -97,6 +97,7 @@ jobs:
       # Upload archives; --exit-zero-on-changes avoids failing this job while Chromatic review is pending.
       # Enable Chromatic’s GitHub integration and require its check to block merges until UI is approved.
       - name: Publish to Chromatic (Playwright archives)
+        if: ${{ secrets.CHROMATIC_PROJECT_TOKEN != '' }}
         run: npm run chromatic:e2e:ci
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
