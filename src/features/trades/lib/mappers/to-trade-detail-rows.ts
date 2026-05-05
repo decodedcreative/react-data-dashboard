@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { formatDateTime } from '@lib/format';
 import { sideLabel } from '../formatters';
 
 const tradeForDetailRowsSchema = z.object({
@@ -19,11 +20,7 @@ export type TradeDetailRow = {
 
 export const toTradeDetailRows = (input: unknown): TradeDetailRow[] => {
   const trade = tradeForDetailRowsSchema.parse(input);
-  const executed = new Intl.DateTimeFormat('en-GB', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-    timeZone: 'UTC',
-  }).format(new Date(trade.executedAt));
+  const executed = formatDateTime(trade.executedAt);
 
   return [
     { label: 'Side', value: sideLabel(trade.side) },

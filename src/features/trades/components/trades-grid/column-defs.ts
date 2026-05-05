@@ -1,10 +1,7 @@
 import type { Trade } from '@types';
+import { formatCurrency, formatDateTime } from '@lib/format';
 import type { DataGridColumnDef } from '@shared/components/data-grid';
-import {
-  formatTradeExecutedAt,
-  formatTradePriceUsd,
-  sideLabel,
-} from '@features/trades/lib';
+import { sideLabel } from '@features/trades/lib';
 
 export const gridColumnDefs: DataGridColumnDef<Trade>[] = [
   { field: 'id', headerName: 'ID', maxWidth: 130, flex: 0 },
@@ -33,7 +30,8 @@ export const gridColumnDefs: DataGridColumnDef<Trade>[] = [
   {
     field: 'price',
     headerName: 'Price',
-    valueFormatter: formatTradePriceUsd,
+    valueFormatter: ({ value }) =>
+      typeof value === 'number' ? formatCurrency(value) : '',
     type: 'numericColumn',
     minWidth: 115,
   },
@@ -47,7 +45,10 @@ export const gridColumnDefs: DataGridColumnDef<Trade>[] = [
   {
     field: 'executedAt',
     headerName: 'Executed',
-    valueFormatter: formatTradeExecutedAt,
+    valueFormatter: ({ value }) =>
+      typeof value === 'string' || typeof value === 'number' || value instanceof Date
+        ? formatDateTime(value)
+        : '',
     minWidth: 170,
     flex: 1.5,
   },

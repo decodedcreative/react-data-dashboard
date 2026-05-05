@@ -8,7 +8,7 @@ import type { AgGridReactProps, CustomCellRendererProps } from 'ag-grid-react';
 
 export type DataGridProps<TData = unknown> = Omit<
   AgGridReactProps<TData>,
-  'containerStyle'
+  'className' | 'containerStyle'
 >;
 
 export type DataGridColumnDef<TData = unknown, TValue = unknown> = ColDef<
