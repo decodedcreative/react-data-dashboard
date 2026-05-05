@@ -15,6 +15,17 @@ React + TypeScript + **Next.js** (App Router) for a data-heavy trading-style das
 
 Tests use [Vitest](https://vitest.dev) with a `jsdom` environment, [Testing Library](https://testing-library.com) for components, and [jest-dom](https://github.com/testing-library/jest-dom) in `vitest.setup.ts`. Vitest is wired via `vitest.config.ts` (Vite is only used as the test runner’s bundler).
 
+### E2E Testing (Playwright)
+
+- Install browsers locally: `npm run test:e2e:install`
+- Headless E2E run: `npm run test:e2e`
+- Headed debugging run: `npm run test:e2e:headed`
+- Playwright UI mode: `npm run test:e2e:ui`
+
+Playwright uses `playwright.config.ts` and runs tests from `e2e/`. By default it starts the Next.js app via `npm run dev`, runs Chromium, and records traces/screenshots/videos on failures or retries.
+
+In CI, browser setup is performed with `npx playwright install --with-deps chromium` before running `npm run test:e2e`.
+
 ## Formatting
 
 [Prettier](https://prettier.io) is configured in `.prettierrc` with [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) so ESLint does not re-enforce style rules that Prettier owns.
