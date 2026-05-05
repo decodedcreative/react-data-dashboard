@@ -1,3 +1,4 @@
+import { takeNamedChromaticSnapshot } from './chromatic-helpers';
 import { expect, test } from './fixtures';
 
 test.describe('trades page', () => {
@@ -10,7 +11,10 @@ test.describe('trades page', () => {
     await expect(tradesPage.aaplLink).toHaveAttribute('href', '/trades/TRD-001');
   });
 
-  test('navigates from list to detail and back', async ({ tradesPage, tradeDetailPage }) => {
+  test('navigates from list to detail and back', async (
+    { tradesPage, tradeDetailPage },
+    testInfo,
+  ) => {
     await tradesPage.goto();
     await tradesPage.openAaplTrade();
 
@@ -18,6 +22,8 @@ test.describe('trades page', () => {
     await expect(tradeDetailPage.aaplHeading).toBeVisible();
     await expect(tradeDetailPage.tradeIdLabel).toBeVisible();
     await expect(tradeDetailPage.tradeIdValue).toBeVisible();
+
+    await takeNamedChromaticSnapshot(tradesPage.page, 'trade-detail-TRD-001', testInfo);
 
     await tradesPage.backToTradesLink.click();
     await expect(tradesPage.page).toHaveURL('/trades');

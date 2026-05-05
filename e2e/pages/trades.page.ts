@@ -21,6 +21,9 @@ export class TradesPage {
 
   async openAaplTrade() {
     await this.aaplLink.waitFor({ state: 'visible' });
-    await this.aaplLink.click();
+    await Promise.all([
+      this.page.waitForURL('**/trades/TRD-001'),
+      this.aaplLink.click(),
+    ]);
   }
 }
