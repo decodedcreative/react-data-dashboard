@@ -1,16 +1,27 @@
 import Link from 'next/link';
+import { getClassNames } from '@lib/getClassNames';
+import classNames from './page.styles';
 
-export default function AboutPage() {
+const AboutPage = () => {
+  const aboutPageClassNames = getClassNames(classNames);
+
   return (
-    <main style={{ padding: '1rem', maxWidth: 640 }}>
-      <h1 style={{ marginTop: 0 }}>About</h1>
-      <p>
+    <main className={aboutPageClassNames.component}>
+      <h1 className={aboutPageClassNames.title}>About</h1>
+      <p className={aboutPageClassNames.paragraph}>
         Product context and docs can live here. Main data views are under{' '}
-        <Link href="/trades">Trades</Link>.
+        <Link href="/trades" className={aboutPageClassNames.link}>
+          Trades
+        </Link>
+        .
       </p>
-      <p>
-        <Link href="/">← Home</Link>
+      <p className={aboutPageClassNames.paragraph}>
+        <Link href="/" className={aboutPageClassNames.link}>
+          ← Home
+        </Link>
       </p>
     </main>
   );
-}
+};
+
+export default AboutPage;

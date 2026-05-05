@@ -1,11 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Trade } from '@types';
 import { getTrades } from '@api';
-
-import { TradesList } from './TradesList';
+import type { Trade } from '@types';
+import { TradesList } from './trades-list';
 
 const mockTrades: Trade[] = [
   {
@@ -24,13 +22,13 @@ vi.mock('@api', () => ({
   getTrades: vi.fn(),
 }));
 
-function createTestQueryClient() {
+const createTestQueryClient = () => {
   return new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
 }
 
-function renderWithProvider() {
+const renderWithProvider = () => {
   return render(
     <QueryClientProvider client={createTestQueryClient()}>
       <TradesList />
@@ -44,14 +42,12 @@ describe('TradesList', () => {
     vi.mocked(getTrades).mockImplementation(() => Promise.resolve(mockTrades));
   });
 
-  it('renders the trades list heading and listed trades after data loads', async () => {
+  it('renders listed trades after data loads', async () => {
     renderWithProvider();
     expect(screen.getByText('Loading trades...')).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('heading', { name: 'Trades' })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('list')).toBeInTheDocument();
     });
 
     expect(screen.getByText(/AAPL/)).toBeInTheDocument();
@@ -59,22 +55,12 @@ describe('TradesList', () => {
     expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1);
   });
 
-  it('refetches trades when the user clicks Refresh trades', async () => {
-    const user = userEvent.setup();
+  it('renders an empty-state message when no trades are returned', async () => {
+    vi.mocked(getTrades).mockImplementation(() => Promise.resolve([]));
     renderWithProvider();
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: 'Refresh trades' })
-      ).toBeInTheDocument();
-    });
-
-    expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1);
-
-    await user.click(screen.getByRole('button', { name: 'Refresh trades' }));
-
-    await waitFor(() => {
-      expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(2);
+      expect(screen.getByText('No trades found')).toBeInTheDocument();
     });
   });
 });

@@ -1,1 +1,0 @@
-export { sideLabel } from './sideLabel';

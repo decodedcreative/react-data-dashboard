@@ -15,7 +15,10 @@
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./src/*"],
+      "@app/*": ["./src/app/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@shared/*": ["./src/shared/*"],
       "@types": ["./src/types"],
       "@types/*": ["./src/types/*"],
       "@features": ["./src/features"],

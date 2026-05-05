@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getTradeById } from '@api';
-import { sideLabel } from '@/utils';
+import { toTradeDetailRows } from '@features/trades/lib';
+import { getClassNames } from '@lib/getClassNames';
+import classNames from './page.styles';
 
 type PageProps = {
   params: Promise<{ tradeId: string }>;
 };
 
-export default async function TradeDetailPage({ params }: PageProps) {
+const TradeDetailPage = async ({ params }: PageProps) => {
   const { tradeId } = await params;
   const trade = await getTradeById(tradeId);
 
@@ -15,40 +17,31 @@ export default async function TradeDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const executed = new Date(trade.executedAt).toLocaleString(undefined, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  });
+  const rows = toTradeDetailRows(trade);
 
-  const rows: { label: string; value: string | number }[] = [
-    { label: 'Side', value: sideLabel(trade.side) },
-    { label: 'Quantity', value: trade.quantity },
-    { label: 'Price', value: trade.price.toFixed(2) },
-    { label: 'Status', value: trade.status },
-    { label: 'Trader', value: trade.trader },
-    { label: 'Executed', value: executed },
-  ];
+  const tradeDetailClassNames = getClassNames(classNames);
 
   return (
-    <main style={{ padding: '1rem', maxWidth: 720 }}>
-      <h1>{trade.symbol}</h1>
-      <p style={{ margin: '0 0 0.5rem' }}>
-        Trade ID <code>{trade.id}</code>
+    <main className={tradeDetailClassNames.component}>
+      <h1 className={tradeDetailClassNames.title}>{trade.symbol}</h1>
+      <p className={tradeDetailClassNames.tradeIdText}>
+        Trade ID <code className={tradeDetailClassNames.tradeIdCode}>{trade.id}</code>
       </p>
-      <section
-        aria-label="Trade details"
-        style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}
-      >
+      <section aria-label="Trade details" className={tradeDetailClassNames.details}>
         {rows.map(({ label, value }) => (
-          <div key={label}>
-            <div style={{ fontSize: '0.8rem', color: '#555' }}>{label}</div>
-            <div>{value}</div>
+          <div key={label} className={tradeDetailClassNames.row}>
+            <div className={tradeDetailClassNames.label}>{label}</div>
+            <div className={tradeDetailClassNames.value}>{value}</div>
           </div>
         ))}
       </section>
-      <p style={{ marginTop: '1.5rem' }}>
-        <Link href="/trades">← Back to trades</Link>
+      <p className={tradeDetailClassNames.backLinkWrap}>
+        <Link href="/trades" className={tradeDetailClassNames.backLink}>
+          ← Back to trades
+        </Link>
       </p>
     </main>
   );
 }
+
+export default TradeDetailPage;

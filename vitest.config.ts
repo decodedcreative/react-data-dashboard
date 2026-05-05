@@ -9,7 +9,10 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@app': path.resolve(__dirname, './src/app'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@lib': path.resolve(__dirname, './src/lib'),
+      '@shared': path.resolve(__dirname, './src/shared'),
       '@types': path.resolve(__dirname, './src/types'),
       '@features': path.resolve(__dirname, './src/features'),
       '@api': path.resolve(__dirname, './src/api'),

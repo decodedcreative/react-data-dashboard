@@ -1,12 +1,20 @@
 import { getTrades } from '@api';
-import { TradesList } from '@/features/trades/components/TradesList';
+import { TradesList } from '@features/trades/components/trades-list';
+import { getClassNames } from '@lib/getClassNames';
+import classNames from './page.styles';
 
-export default async function TradesPage() {
+const TradesPage = async () => {
   const initialTrades = await getTrades();
+  const tradesPageClassNames = getClassNames(classNames);
 
   return (
-    <div style={{ padding: '0 1rem' }}>
+    <main className={tradesPageClassNames.component}>
+      <header className={tradesPageClassNames.header}>
+        <h1 className={tradesPageClassNames.title}>Trades</h1>
+      </header>
       <TradesList initialTrades={initialTrades} />
-    </div>
+    </main>
   );
-}
+};
+
+export default TradesPage;
