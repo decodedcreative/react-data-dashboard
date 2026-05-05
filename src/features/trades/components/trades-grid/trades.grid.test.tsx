@@ -50,6 +50,10 @@ describe('GridTrades', () => {
       expect(screen.getByRole('grid')).toBeInTheDocument();
     });
 
+    await waitFor(() => {
+      expect(screen.getByRole('link', { name: 'AAPL' })).toBeInTheDocument();
+    });
+    expect(screen.getByText('Buy')).toBeInTheDocument();
     expect(screen.queryByText('No trades found')).not.toBeInTheDocument();
     expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1);
   });

@@ -4,12 +4,12 @@ import type {
   GridOptions,
   GetRowIdParams,
 } from 'ag-grid-community';
-import type {
-  AgGridReactProps,
-  CustomCellRendererProps,
-} from 'ag-grid-react';
+import type { AgGridReactProps, CustomCellRendererProps } from 'ag-grid-react';
 
-export type DataGridProps<TData = unknown> = AgGridReactProps<TData>;
+export type DataGridProps<TData = unknown> = Omit<
+  AgGridReactProps<TData>,
+  'containerStyle'
+>;
 
 export type DataGridColumnDef<TData = unknown, TValue = unknown> = ColDef<
   TData,
