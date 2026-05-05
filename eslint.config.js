@@ -12,6 +12,14 @@ const compat = new FlatCompat({
 const eslintConfig = [
   { ignores: ['.next/**', 'dist/**', 'coverage/**'] },
   ...compat.extends('next/core-web-vitals'),
+  {
+    rules: {
+      'padding-line-between-statements': [
+        'error',
+        { blankLine: 'never', prev: 'import', next: 'import' },
+      ],
+    },
+  },
   eslintConfigPrettier,
 ];
 
