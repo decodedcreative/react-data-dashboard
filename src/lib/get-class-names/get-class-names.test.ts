@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
 import { describe, expect, it } from 'vitest';
-import { getClassNames } from './getClassNames';
+import { getClassNames } from './get-class-names';
 
 describe('getClassNames', () => {
   it('returns merged class names for all slots by default', () => {

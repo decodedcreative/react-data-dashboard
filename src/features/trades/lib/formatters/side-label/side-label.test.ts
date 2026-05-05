@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { sideLabel } from './sideLabel';
+import { sideLabel } from './side-label';
 
 describe('sideLabel', () => {
   it('returns display labels for each side', () => {
