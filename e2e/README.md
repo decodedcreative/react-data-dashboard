@@ -35,3 +35,4 @@ await expect(homePage.page).toHaveURL(/\/trades$/);
 - `npm run test:e2e:headed` for local debugging
 - `npm run test:e2e:ui` for Playwright UI mode
 - `npm run chromatic:e2e` to run Playwright through Chromatic and upload builds (needs `CHROMATIC_PROJECT_TOKEN` or `-t`; see Chromatic docs)
+- CI uses **`npm run chromatic:e2e:ci`** (`--exit-zero-on-changes`) so Chromatic’s GitHub check—not the Actions step—gates merge on snapshot approval ([Chromatic CI](https://www.chromatic.com/docs/ci)).

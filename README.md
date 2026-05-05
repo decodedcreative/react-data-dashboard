@@ -32,11 +32,19 @@ This project does **not** use Storybook; visual regression is **Playwright-only*
 
 E2E fixtures use `@chromatic-com/playwright` so Chromatic captures an archive for each Chromium test ([Playwright integration](https://www.chromatic.com/docs/playwright/)). Locally, plain `npm run test:e2e` still verifies behavior.
 
-To publish snapshots for review in Chromatic, add a Chromatic project token and run:
+To publish snapshots for review in Chromatic, add a Chromatic project token and run locally:
 
 - `npm run chromatic:e2e` (or `CHROMATIC_PROJECT_TOKEN=… npx chromatic --playwright`)
 
-Mirror the existing `e2e` CI job whenever you automate this: checkout, `npm ci`, `npx playwright install --with-deps chromium`, then `npm run chromatic:e2e` with `CHROMATIC_PROJECT_TOKEN` provided as an encrypted repo secret ([Chromatic CI](https://www.chromatic.com/docs/ci)).
+GitHub Actions uses **`npm run chromatic:e2e:ci`** (`--exit-zero-on-changes`) after `e2e` uploads `./test-results`, so uploads succeed while Chromatic manages review state separately.
+
+### GitHub merge gate (recommended)
+
+Branch protection intentionally does **not** require **`CI / chromatic-e2e`** (that job uploads archives and exits green when using `chromatic:e2e:ci`). **Blocking merges until visuals are reviewed** relies on Chromatic’s own GitHub App check—you must enable and require it.
+
+1. In Chromatic: turn on **[GitHub integration](https://www.chromatic.com/docs/github-actions)** for this repo so Chromatic publishes the **UI/visual check** on PRs ([Chromatic CI](https://www.chromatic.com/docs/ci)).
+2. In GitHub: **Settings → Branches → Branch protection rules** for `main`, under **Require status checks**, add **the Chromatic check** whose exact name appears on a PR after the first Chromatic build (distinct from **`CI / chromatic-e2e`**).
+3. After that you can approve or reject snapshots in Chromatic ([UI Tests / UI Review](https://www.chromatic.com/docs/in-pull-request)); the Chromatic check updates **without rerunning Actions**.
 
 ## Formatting
 
