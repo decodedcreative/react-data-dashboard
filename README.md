@@ -26,6 +26,16 @@ Playwright uses `playwright.config.ts` and runs tests from `e2e/`. By default it
 
 In CI, browser setup is performed with `npx playwright install --with-deps chromium` before running `npm run test:e2e`.
 
+### Chromatic visual capture (Playwright)
+
+E2E fixtures use `@chromatic-com/playwright` so Chromatic captures an archive for each Chromium test ([Playwright integration](https://www.chromatic.com/docs/playwright/)). Locally, plain `npm run test:e2e` still verifies behavior.
+
+To publish snapshots for review in Chromatic, add a Chromatic project token and run:
+
+- `npm run chromatic:e2e` (or `CHROMATIC_PROJECT_TOKEN=… npx chromatic --playwright`)
+
+Mirror the existing `e2e` CI job whenever you automate this: checkout, `npm ci`, `npx playwright install --with-deps chromium`, then `npm run chromatic:e2e` with `CHROMATIC_PROJECT_TOKEN` provided as an encrypted repo secret ([Chromatic CI](https://www.chromatic.com/docs/ci)).
+
 ## Formatting
 
 [Prettier](https://prettier.io) is configured in `.prettierrc` with [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) so ESLint does not re-enforce style rules that Prettier owns.

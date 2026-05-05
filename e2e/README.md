@@ -2,6 +2,8 @@
 
 This project uses Playwright for user-facing end-to-end coverage.
 
+`fixtures.ts` extends [`@chromatic-com/playwright`](https://www.chromatic.com/docs/playwright/), so Chromium tests record Chromatic-compatible archives automatically (each test snapshots at completion). Add `takeNamedChromaticSnapshot()` from `chromatic-helpers.ts` inline in the same spec as your behavior assertions when you want a named mid-flow capture (see Chromatic [`takeSnapshot`](https://www.chromatic.com/docs/playwright/targeted-snapshots)). There is no separate “visual only” suite—snapshots ride on the real tests.
+
 ## Structure
 
 - `*.spec.ts` files define user behavior and assertions.
@@ -32,3 +34,4 @@ await expect(homePage.page).toHaveURL(/\/trades$/);
 - `npm run test:e2e` for headless runs
 - `npm run test:e2e:headed` for local debugging
 - `npm run test:e2e:ui` for Playwright UI mode
+- `npm run chromatic:e2e` to run Playwright through Chromatic and upload builds (needs `CHROMATIC_PROJECT_TOKEN` or `-t`; see Chromatic docs)
