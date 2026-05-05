@@ -19,10 +19,11 @@ export type TradeDetailRow = {
 
 export const toTradeDetailRows = (input: unknown): TradeDetailRow[] => {
   const trade = tradeForDetailRowsSchema.parse(input);
-  const executed = new Date(trade.executedAt).toLocaleString(undefined, {
+  const executed = new Intl.DateTimeFormat('en-GB', {
     dateStyle: 'medium',
     timeStyle: 'short',
-  });
+    timeZone: 'UTC',
+  }).format(new Date(trade.executedAt));
 
   return [
     { label: 'Side', value: sideLabel(trade.side) },

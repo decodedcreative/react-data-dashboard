@@ -27,6 +27,7 @@ export const TradesList = ({ initialTrades }: TradesListProps) => {
 
   if (isLoading) return <div>Loading trades...</div>;
   if (error) return <div>Failed to load trades</div>;
+  if (!data?.length) return <div>No trades found</div>;
 
   return (
     <ul className={tradesListClassNames.list}>

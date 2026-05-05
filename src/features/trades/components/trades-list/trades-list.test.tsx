@@ -54,4 +54,13 @@ describe('TradesList', () => {
     expect(screen.getByText(/— Buy —/)).toBeInTheDocument();
     expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1);
   });
+
+  it('renders an empty-state message when no trades are returned', async () => {
+    vi.mocked(getTrades).mockImplementation(() => Promise.resolve([]));
+    renderWithProvider();
+
+    await waitFor(() => {
+      expect(screen.getByText('No trades found')).toBeInTheDocument();
+    });
+  });
 });
