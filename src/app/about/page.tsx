@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getClassNames } from '@lib/getClassNames';
+import { getClassNames } from '@lib/get-class-names';
 import classNames from './page.styles';
 
 const AboutPage = () => {

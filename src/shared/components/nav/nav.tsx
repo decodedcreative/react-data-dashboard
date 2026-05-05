@@ -1,8 +1,8 @@
 'use client';
 
 import type { PropsWithChildren } from 'react';
-import { useGetClassNames } from '@hooks/useGetClassNames';
-import classNames from './app-nav.styles';
+import { useGetClassNames } from '@hooks/use-get-class-names';
+import classNames from './nav.styles';
 
 export type NavProps = PropsWithChildren;
 
@@ -16,4 +16,4 @@ export const Nav = ({ children }: NavProps) => {
   );
 }
 
-Nav.displayName = 'Nav';
+Nav.displayName = 'RDDB_Nav';

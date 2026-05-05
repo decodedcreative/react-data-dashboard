@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useGetClassNames } from '@hooks/useGetClassNames';
-import classNames from './app-nav-link.styles';
+import { useGetClassNames } from '@hooks/use-get-class-names';
+import classNames from './nav-link.styles';
 
 const linkIsActive = (pathname: string, href: string): boolean => {
   if (href === '/') return pathname === '/';
@@ -34,4 +34,4 @@ export const NavLink = ({ href, children }: NavLinkProps) => {
   );
 }
 
-NavLink.displayName = 'NavLink';
+NavLink.displayName = 'RDDB_Nav_Link';

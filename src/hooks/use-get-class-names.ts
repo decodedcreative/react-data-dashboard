@@ -3,8 +3,8 @@
 import { useMemo } from 'react';
 import { twMerge } from 'tailwind-merge';
 import { useThemeProvider } from '@app/theme-provider';
-import type { CvaSlotFn } from '@lib/getClassNames';
-import { getClassNames } from '@lib/getClassNames';
+import type { CvaSlotFn } from '@lib/get-class-names';
+import { getClassNames } from '@lib/get-class-names';
 
 export const useGetClassNames = <K extends string>(
   classNames: Record<K, CvaSlotFn>,
