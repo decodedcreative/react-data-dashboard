@@ -96,9 +96,15 @@ jobs:
 
       # Upload archives; --exit-zero-on-changes avoids failing this job while Chromatic review is pending.
       # Enable Chromatic’s GitHub integration and require its check to block merges until UI is approved.
-      # Note: Don’t gate this step with `if: secrets.FOO …` — secrets aren’t usable in conditional expressions and CI can mis-evaluate/fail.
+      # Skip publish when token is unset (fork PRs / local forks of CI semantics) — check in shell;
+      # GitHub forbids reliably branching on secrets in step `if:` expressions.
       - name: Publish to Chromatic (Playwright archives)
-        run: npm run chromatic:e2e:ci
+        run: |
+          if [ -z "${CHROMATIC_PROJECT_TOKEN:-}" ]; then
+            echo 'CHROMATIC_PROJECT_TOKEN not set; skipping Chromatic publish.'
+            exit 0
+          fi
+          npm run chromatic:e2e:ci
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           CHROMATIC_ARCHIVE_LOCATION: ./test-results
