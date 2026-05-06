@@ -2,15 +2,19 @@ services:
   postgres:
     image: postgres:16
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: react_data_dashboard
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-react_data_dashboard}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d react_data_dashboard"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-react_data_dashboard}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

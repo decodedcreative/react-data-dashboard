@@ -12,7 +12,7 @@ React + TypeScript + **Next.js** (App Router) for a data-heavy trading-style das
 
 - Start Postgres: `docker compose up -d postgres`
 - Stop Postgres: `docker compose stop postgres`
-- Reset database volume: `docker compose down -v`
+- Reset database volume: `docker compose down -v` (warning: removes all project volumes, not just Postgres data)
 - Inspect service status: `docker compose ps`
 - Inspect logs: `docker compose logs -f postgres`
 
