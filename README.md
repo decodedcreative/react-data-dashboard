@@ -8,6 +8,18 @@ React + TypeScript + **Next.js** (App Router) for a data-heavy trading-style das
 - Local dev: `npm run dev`
 - Production build: `npm run build` then `npm start`
 
+### Local Postgres (Docker Compose)
+
+- Start Postgres: `docker compose up -d postgres`
+- Stop Postgres: `docker compose stop postgres`
+- Reset database volume: `docker compose down -v`
+- Inspect service status: `docker compose ps`
+- Inspect logs: `docker compose logs -f postgres`
+
+Local connection string:
+
+`postgresql://postgres:postgres@localhost:5432/react_data_dashboard`
+
 ## Testing
 
 - Watch mode: `npm test`
