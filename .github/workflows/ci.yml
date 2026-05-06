@@ -32,3 +32,79 @@ jobs:
 
       - name: Unit tests
         run: npm run test:run
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npm run test:e2e:install:ci
+
+      - name: E2E tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Playwright test results
+        if: always()
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4
+        with:
+          name: playwright-test-results
+          path: test-results/
+          retention-days: 14
+
+  chromatic-e2e:
+    runs-on: ubuntu-latest
+    needs: e2e
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download Playwright test results
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: playwright-test-results
+          path: ./test-results
+
+      # Upload archives; --exit-zero-on-changes avoids failing this job while Chromatic review is pending.
+      # Enable Chromatic’s GitHub integration and require its check to block merges until UI is approved.
+      # Skip publish when token is unset (fork PRs / local forks of CI semantics) — check in shell;
+      # GitHub forbids reliably branching on secrets in step `if:` expressions.
+      - name: Publish to Chromatic (Playwright archives)
+        run: |
+          if [ -z "${CHROMATIC_PROJECT_TOKEN:-}" ]; then
+            echo 'CHROMATIC_PROJECT_TOKEN not set; skipping Chromatic publish.'
+            exit 0
+          fi
+          npm run chromatic:e2e:ci
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          CHROMATIC_ARCHIVE_LOCATION: ./test-results

@@ -15,6 +15,37 @@ React + TypeScript + **Next.js** (App Router) for a data-heavy trading-style das
 
 Tests use [Vitest](https://vitest.dev) with a `jsdom` environment, [Testing Library](https://testing-library.com) for components, and [jest-dom](https://github.com/testing-library/jest-dom) in `vitest.setup.ts`. Vitest is wired via `vitest.config.ts` (Vite is only used as the test runner’s bundler).
 
+### E2E Testing (Playwright)
+
+- Install browsers locally: `npm run test:e2e:install`
+- Headless E2E run: `npm run test:e2e`
+- Headed debugging run: `npm run test:e2e:headed`
+- Playwright UI mode: `npm run test:e2e:ui`
+
+Playwright uses `playwright.config.ts` and runs tests from `e2e/`. By default it starts the Next.js app via `npm run dev`, runs Chromium, and records traces/screenshots/videos on failures or retries.
+
+In CI, browser setup runs `npm run test:e2e:install:ci` (system deps via `--with-deps`) before `npm run test:e2e`. Locally, `npm run test:e2e:install` installs Chromium only (no `--with-deps`).
+
+### Chromatic visual capture (Playwright)
+
+This project does **not** use Storybook; visual regression is **Playwright-only** via Chromatic’s E2E flow.
+
+E2E fixtures use `@chromatic-com/playwright` so Chromatic captures an archive for each Chromium test ([Playwright integration](https://www.chromatic.com/docs/playwright/)). Locally, plain `npm run test:e2e` still verifies behavior.
+
+To publish snapshots for review in Chromatic, add a Chromatic project token and run locally:
+
+- `npm run chromatic:e2e` (or `CHROMATIC_PROJECT_TOKEN=… npx chromatic --playwright`)
+
+GitHub Actions uses **`npm run chromatic:e2e:ci`** (`--exit-zero-on-changes`) after `e2e` uploads `./test-results`, so uploads succeed while Chromatic manages review state separately.
+
+### GitHub merge gate (recommended)
+
+Branch protection intentionally does **not** require **`CI / chromatic-e2e`** (that job uploads archives and exits green when using `chromatic:e2e:ci`). **Blocking merges until visuals are reviewed** relies on Chromatic’s own GitHub App check—you must enable and require it.
+
+1. In Chromatic: turn on **[GitHub integration](https://www.chromatic.com/docs/github-actions)** for this repo so Chromatic publishes the **UI/visual check** on PRs ([Chromatic CI](https://www.chromatic.com/docs/ci)).
+2. In GitHub: **Settings → Branches → Branch protection rules** for `main`, under **Require status checks**, add **the Chromatic check** whose exact name appears on a PR after the first Chromatic build (distinct from **`CI / chromatic-e2e`**).
+3. After that you can approve or reject snapshots in Chromatic ([UI Tests / UI Review](https://www.chromatic.com/docs/in-pull-request)); the Chromatic check updates **without rerunning Actions**.
+
 ## Formatting
 
 [Prettier](https://prettier.io) is configured in `.prettierrc` with [eslint-config-prettier](https://github.com/prettier/eslint-config-prettier) so ESLint does not re-enforce style rules that Prettier owns.

@@ -12,6 +12,9 @@ dist
 dist-ssr
 .next
 out
+playwright-report
+test-results
+chromatic-archives
 *.local
 *.tsbuildinfo
 
