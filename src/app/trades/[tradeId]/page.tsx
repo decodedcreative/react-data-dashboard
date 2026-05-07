@@ -5,6 +5,8 @@ import { getTradeByIdFromDb } from '@features/trades/server/trades.db';
 import { getClassNames } from '@lib/get-class-names';
 import classNames from './page.styles';
 
+export const dynamic = 'force-dynamic';
+
 type PageProps = {
   params: Promise<{ tradeId: string }>;
 };

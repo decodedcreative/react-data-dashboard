@@ -7,6 +7,14 @@ React + TypeScript + **Next.js** (App Router) for a data-heavy trading-style das
 - Install dependencies: `npm install`
 - Local dev: `npm run dev`
 - Production build: `npm run build` then `npm start`
+- Copy env template: `cp .env.example .env.local`
+
+## Deployment (Vercel)
+
+- Vercel project configuration: `vercel.json`
+- Environment variable template: `.env.example`
+- Full setup runbook (production/staging/PR previews): `docs/vercel-deployment.md`
+- CI guard for deployment contract: `npm run verify:vercel-config`
 
 ### Local Postgres (Docker Compose)
 

@@ -44,6 +44,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Verify Vercel deployment contract
+        run: npm run verify:vercel-config
+
       - name: Generate Prisma client
         run: npm run db:generate
 
@@ -89,6 +92,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Verify Vercel deployment contract
+        run: npm run verify:vercel-config
 
       - name: Generate Prisma client
         run: npm run db:generate
