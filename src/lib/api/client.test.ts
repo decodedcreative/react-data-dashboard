@@ -7,16 +7,17 @@ describe('apiFetch', () => {
       ok: false,
       status: 500,
       statusText: 'Internal Server Error',
-      json: vi.fn().mockRejectedValue(new Error('invalid json')),
       text: vi.fn().mockResolvedValue('Database unavailable'),
     } as unknown as Response);
 
-    await expect(apiFetch('/api/trades', (payload) => payload)).rejects.toMatchObject({
-      message: 'Database unavailable',
-      status: 500,
-    });
-
-    fetchSpy.mockRestore();
+    try {
+      await expect(apiFetch('/api/trades', (payload) => payload)).rejects.toMatchObject({
+        message: 'Database unavailable',
+        status: 500,
+      });
+    } finally {
+      fetchSpy.mockRestore();
+    }
   });
 });
 

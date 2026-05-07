@@ -24,19 +24,26 @@ export async function apiFetch<T>(
   const response = await fetch(input, init);
 
   if (!response.ok) {
-    let message = `Request failed with status ${response.status}`;
+    let message = response.statusText || `Request failed with status ${response.status}`;
 
     try {
-      const payload: unknown = await response.json();
-      if (isApiErrorShape(payload)) message = payload.error;
-    } catch {
-      try {
-        const fallbackText = await response.text();
-        const trimmed = fallbackText.trim();
-        if (trimmed) message = trimmed;
-      } catch {
-        if (response.statusText) message = response.statusText;
+      const rawBody = await response.text();
+      const trimmedBody = rawBody.trim();
+
+      if (trimmedBody) {
+        try {
+          const payload: unknown = JSON.parse(trimmedBody);
+          if (isApiErrorShape(payload)) {
+            message = payload.error;
+          } else {
+            message = trimmedBody;
+          }
+        } catch {
+          message = trimmedBody;
+        }
       }
+    } catch {
+      // Fall back to statusText/default message when body is unreadable.
     }
 
     throw createApiClientError(message, response.status);
