@@ -12,13 +12,13 @@ function toTrade(t: DbTrade): Trade {
     price: t.price.toNumber(),
     status: t.status,
     trader: t.trader,
-    executedAt: t.executedAt.toISOString(),
+    executedAt: t.executedAt?.toISOString() ?? null,
   };
 }
 
 export async function getTradesFromDb(): Promise<Trade[]> {
   const trades = await prisma.trade.findMany({
-    orderBy: { executedAt: 'desc' },
+    orderBy: [{ executedAt: 'desc' }, { createdAt: 'desc' }],
   });
 
   return trades.map(toTrade);

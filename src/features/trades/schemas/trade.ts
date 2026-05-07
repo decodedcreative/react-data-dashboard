@@ -14,7 +14,7 @@ export const TradeSchema = z.object({
   price: z.number(),
   status: TradeStatusSchema,
   trader: z.string(),
-  executedAt: z.string().datetime(),
+  executedAt: z.string().datetime().nullable(),
 });
 
 export type Trade = z.infer<typeof TradeSchema>;

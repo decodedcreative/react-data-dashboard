@@ -32,11 +32,11 @@ model Trade {
   id         String      @id @default(cuid())
   symbol     String
   side       TradeSide
-  quantity   Decimal
-  price      Decimal
+  quantity   Decimal     @db.Decimal(19, 8)
+  price      Decimal     @db.Decimal(19, 8)
   status     TradeStatus
   trader     String
-  executedAt DateTime
+  executedAt DateTime?
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
 

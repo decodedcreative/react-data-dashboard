@@ -9,7 +9,7 @@ export type TradeDetailRow = {
 
 export const toTradeDetailRows = (input: unknown): TradeDetailRow[] => {
   const trade = TradeSchema.parse(input);
-  const executed = formatDateTime(trade.executedAt);
+  const executed = trade.executedAt ? formatDateTime(trade.executedAt) : 'Pending';
 
   return [
     { label: 'Side', value: sideLabel(trade.side) },

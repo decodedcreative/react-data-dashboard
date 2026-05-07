@@ -25,7 +25,7 @@ const seedTrades = [
     price: 171.25,
     status: 'pending',
     trader: 'Sarah Khan',
-    executedAt: new Date('2026-04-24T11:05:00Z'),
+    executedAt: null,
   },
 ];
 
