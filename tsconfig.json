@@ -22,9 +22,7 @@
       "@types": ["./src/types"],
       "@types/*": ["./src/types/*"],
       "@features": ["./src/features"],
-      "@features/*": ["./src/features/*"],
-      "@api": ["./src/api"],
-      "@api/*": ["./src/api/*"]
+      "@features/*": ["./src/features/*"]
     }
   },
   "include": [

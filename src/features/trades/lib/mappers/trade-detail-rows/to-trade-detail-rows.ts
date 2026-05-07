@@ -1,17 +1,6 @@
-import { z } from 'zod';
 import { formatDateTime } from '@lib/format';
-import { sideLabel } from '../formatters';
-
-const tradeForDetailRowsSchema = z.object({
-  id: z.string(),
-  symbol: z.string(),
-  side: z.enum(['buy', 'sell']),
-  quantity: z.number(),
-  price: z.number(),
-  status: z.enum(['filled', 'pending', 'cancelled']),
-  trader: z.string(),
-  executedAt: z.string().datetime(),
-});
+import { TradeSchema } from '@features/trades/schemas/trade';
+import { sideLabel } from '../../formatters';
 
 export type TradeDetailRow = {
   label: string;
@@ -19,7 +8,7 @@ export type TradeDetailRow = {
 };
 
 export const toTradeDetailRows = (input: unknown): TradeDetailRow[] => {
-  const trade = tradeForDetailRowsSchema.parse(input);
+  const trade = TradeSchema.parse(input);
   const executed = formatDateTime(trade.executedAt);
 
   return [
@@ -31,3 +20,4 @@ export const toTradeDetailRows = (input: unknown): TradeDetailRow[] => {
     { label: 'Executed', value: executed },
   ];
 };
+

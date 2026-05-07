@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getTradeById } from '@api';
 import { toTradeDetailRows } from '@features/trades/lib';
+import { getTradeByIdFromDb } from '@features/trades/server/trades.db';
 import { getClassNames } from '@lib/get-class-names';
 import classNames from './page.styles';
 
@@ -11,7 +11,7 @@ type PageProps = {
 
 const TradeDetailPage = async ({ params }: PageProps) => {
   const { tradeId } = await params;
-  const trade = await getTradeById(tradeId);
+  const trade = await getTradeByIdFromDb(tradeId);
 
   if (!trade) {
     notFound();

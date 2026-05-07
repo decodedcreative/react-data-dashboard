@@ -1,10 +1,10 @@
-import { getTrades } from '@api';
 import { GridTrades } from '@features/trades/components/trades-grid';
+import { getTradesFromDb } from '@features/trades/server/trades.db';
 import { getClassNames } from '@lib/get-class-names';
 import classNames from './page.styles';
 
 const TradesPage = async () => {
-  const initialTrades = await getTrades();
+  const initialTrades = await getTradesFromDb();
   const tradesPageClassNames = getClassNames(classNames);
 
   return (

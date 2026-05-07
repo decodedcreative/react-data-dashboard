@@ -34,3 +34,4 @@ describe('toTradeDetailRows', () => {
     expect(() => toTradeDetailRows({ ...mockTrade, executedAt: 'invalid' })).toThrow();
   });
 });
+
