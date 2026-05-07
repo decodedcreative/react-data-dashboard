@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Nav, NavLink } from '@shared/components/nav';
+import { assertDatabaseUrlConfigured } from '@lib/server/database-url';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
@@ -13,6 +14,8 @@ const RootLayout = ({
 }: {
   children: React.ReactNode;
 }) => {
+  assertDatabaseUrlConfigured();
+
   return (
     <html lang="en">
       <body>
