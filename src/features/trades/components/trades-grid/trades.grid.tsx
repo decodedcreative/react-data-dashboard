@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { getTrades } from '@api';
+import { getTrades, tradesKeys } from '@features/trades/client/trades.queries';
 import { useGetClassNames } from '@hooks/use-get-class-names';
 import { DataGrid } from '@shared/components/data-grid';
 import type { DataGridGetRowId } from '@shared/components/data-grid';
@@ -20,7 +20,7 @@ const gridTradeRowId: DataGridGetRowId<Trade> = (params) => params.data.id;
 
 export const GridTrades = ({ initialTrades }: GridTradesProps) => {
   const { data: gridTrades, isLoading: gridIsLoading, error: gridError } = useQuery({
-    queryKey: ['trades'],
+    queryKey: tradesKeys.all,
     queryFn: getTrades,
     ...(initialTrades !== undefined
       ? { initialData: initialTrades, staleTime: GRID_STALE_AFTER_PREFETCH_MS }

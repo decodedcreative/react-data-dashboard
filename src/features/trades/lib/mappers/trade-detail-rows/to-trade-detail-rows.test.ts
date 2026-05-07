@@ -20,7 +20,7 @@ describe('toTradeDetailRows', () => {
       dateStyle: 'medium',
       timeStyle: 'short',
       timeZone: 'UTC',
-    }).format(new Date(mockTrade.executedAt));
+    }).format(new Date(mockTrade.executedAt!));
 
     expect(rows[0]).toEqual({ label: 'Side', value: 'Buy' });
     expect(rows[1]).toEqual({ label: 'Quantity', value: 120 });
@@ -33,4 +33,10 @@ describe('toTradeDetailRows', () => {
   it('throws for invalid trade input', () => {
     expect(() => toTradeDetailRows({ ...mockTrade, executedAt: 'invalid' })).toThrow();
   });
+
+  it('shows Pending when executedAt is null', () => {
+    const rows = toTradeDetailRows({ ...mockTrade, executedAt: null });
+    expect(rows[5]).toEqual({ label: 'Executed', value: 'Pending' });
+  });
 });
+

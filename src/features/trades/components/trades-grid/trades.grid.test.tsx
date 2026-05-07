@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getTrades } from '@api';
+import { getTrades } from '@features/trades/client/trades.queries';
 import type { Trade } from '@types';
 import { GridTrades } from './trades.grid';
 
@@ -18,8 +18,9 @@ const mockTrades: Trade[] = [
   },
 ];
 
-vi.mock('@api', () => ({
+vi.mock('@features/trades/client/trades.queries', () => ({
   getTrades: vi.fn(),
+  tradesKeys: { all: ['trades'] as const, detail: (id: string) => ['trades', id] as const },
 }));
 
 const createTestQueryClient = () => {

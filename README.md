@@ -18,7 +18,20 @@ React + TypeScript + **Next.js** (App Router) for a data-heavy trading-style das
 
 Local connection string:
 
-`postgresql://postgres:postgres@localhost:5432/react_data_dashboard`
+`postgresql://postgres:postgres@127.0.0.1:5433/react_data_dashboard?schema=public`
+
+### Prisma basics
+
+- Generate client from schema: `npm run db:generate`
+- Apply local migrations: `npm run db:migrate`
+- Seed starter data: `npm run db:seed`
+- Open Prisma Studio: `npm run db:studio`
+
+### Architecture notes
+
+- **Server reads:** server components call feature server modules directly (for example, `src/features/trades/server/trades.db.ts`) instead of making internal HTTP calls.
+- **Client reads:** client components use React Query + feature query functions (for example, `src/features/trades/client/trades.queries.ts`) which fetch from `app/api/*` route handlers.
+- **Route handlers:** `src/app/api/*/route.ts` files are thin HTTP boundaries that delegate to feature server logic and map domain outcomes to HTTP responses.
 
 ## Testing
 

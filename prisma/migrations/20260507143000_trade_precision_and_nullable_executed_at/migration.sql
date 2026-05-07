@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Trade"
+ALTER COLUMN "quantity" TYPE DECIMAL(19,8),
+ALTER COLUMN "price" TYPE DECIMAL(19,8),
+ALTER COLUMN "executedAt" DROP NOT NULL;
