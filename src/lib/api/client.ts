@@ -1,10 +1,10 @@
 export type ApiClientError = Error & { status: number };
 
 function createApiClientError(message: string, status: number): ApiClientError {
-  return Object.assign(new Error(message), {
-    name: 'ApiClientError',
-    status,
-  });
+  const error = new Error(message) as ApiClientError;
+  error.name = 'ApiClientError';
+  error.status = status;
+  return error;
 }
 
 type ApiErrorShape = { error: string };
@@ -49,7 +49,17 @@ export async function apiFetch<T>(
     throw createApiClientError(message, response.status);
   }
 
-  const payload: unknown = await response.json();
+  let payload: unknown;
+
+  try {
+    payload = await response.json();
+  } catch (error) {
+    throw createApiClientError(
+      error instanceof Error ? error.message : 'Response body is not valid JSON',
+      response.status
+    );
+  }
+
   return parse(payload);
 }
 

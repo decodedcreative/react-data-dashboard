@@ -19,5 +19,23 @@ describe('apiFetch', () => {
       fetchSpy.mockRestore();
     }
   });
+
+  it('throws ApiClientError when success payload is invalid JSON', async () => {
+    const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: vi.fn().mockRejectedValue(new SyntaxError('Unexpected end of JSON input')),
+    } as unknown as Response);
+
+    try {
+      await expect(apiFetch('/api/trades', (payload) => payload)).rejects.toMatchObject({
+        name: 'ApiClientError',
+        status: 200,
+        message: 'Unexpected end of JSON input',
+      });
+    } finally {
+      fetchSpy.mockRestore();
+    }
+  });
 });
 
