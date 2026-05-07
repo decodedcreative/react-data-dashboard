@@ -25,6 +25,7 @@
     "test:e2e:install:ci": "playwright install --with-deps chromium",
     "chromatic:e2e": "chromatic --playwright",
     "chromatic:e2e:ci": "chromatic --playwright --exit-zero-on-changes",
+    "verify:vercel-config": "node scripts/ci/verify-vercel-config.mjs",
     "prepare": "husky"
   },
   "dependencies": {
