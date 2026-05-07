@@ -5,7 +5,7 @@ This runbook configures Vercel hosting for `react-data-dashboard` across product
 ## 1. Connect the repository
 
 1. In Vercel, click **Add New... -> Project**.
-2. Import `decodedcreative/react-data-dashboard-rddb-72`.
+2. Import `decodedcreative/react-data-dashboard`.
 3. Keep framework as **Next.js** (the repo also contains `vercel.json`).
 
 ## 2. Configure production deployment
