@@ -2,6 +2,28 @@
 
 This runbook configures Vercel hosting for `react-data-dashboard` across production, staging, and PR previews.
 
+## RDDB-71: Neon + Vercel environment documentation
+
+This section captures the environment setup completed for RDDB-71 without exposing secrets:
+
+- **Neon**
+  - One Neon Postgres database is provisioned for **production**.
+  - One Neon Postgres database is provisioned for **staging**.
+- **Vercel**
+  - `DATABASE_URL` (target: **Production**) points to the production Neon database.
+  - `DATABASE_URL` (target: **Preview**, branch filter: `staging`) points to the staging Neon database.
+  - `DATABASE_URL` (target: **Preview**, default/no branch filter) is configured as the fallback for non-staging preview branches.
+
+### Acceptance criteria evidence checklist
+
+Use this checklist when closing the ticket:
+
+- [ ] Vercel project contains a **Production** `DATABASE_URL` entry.
+- [ ] Vercel project contains a **Preview** `DATABASE_URL` entry filtered to the `staging` branch.
+- [ ] Production deployment from `main` connects successfully to production Neon.
+- [ ] Staging deployment from `staging` connects successfully to staging Neon.
+- [ ] Documentation review is complete.
+
 ## 1. Connect the repository
 
 1. In Vercel, click **Add New... -> Project**.
