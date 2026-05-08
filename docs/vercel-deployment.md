@@ -12,7 +12,7 @@ This section captures the environment setup completed for RDDB-71 without exposi
 - **Vercel**
   - `DATABASE_URL` (target: **Production**) points to the production Neon database.
   - `DATABASE_URL` (target: **Preview**, branch filter: `staging`) points to the staging Neon database.
-  - `DATABASE_URL` (target: **Preview**, default/no branch filter) is kept for non-staging preview branches.
+  - `DATABASE_URL` (target: **Preview**, default/no branch filter) is configured as the fallback for non-staging preview branches.
 
 ### Acceptance criteria evidence checklist
 
@@ -22,7 +22,7 @@ Use this checklist when closing the ticket:
 - [ ] Vercel project contains a **Preview** `DATABASE_URL` entry filtered to the `staging` branch.
 - [ ] Production deployment from `main` connects successfully to production Neon.
 - [ ] Staging deployment from `staging` connects successfully to staging Neon.
-- [ ] Documentation is committed in `docs/vercel-deployment.md`.
+- [ ] Documentation review is complete.
 
 ## 1. Connect the repository
 
