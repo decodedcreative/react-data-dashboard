@@ -31,3 +31,6 @@ chromatic-archives
 *.njsproj
 *.sln
 *.sw?
+
+# Vercel
+.vercel
