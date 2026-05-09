@@ -3,6 +3,8 @@ import { getTradesFromDb } from '@features/trades/server/trades.db';
 import { getClassNames } from '@lib/get-class-names';
 import classNames from './page.styles';
 
+export const dynamic = 'force-dynamic';
+
 const TradesPage = async () => {
   const initialTrades = await getTradesFromDb();
   const tradesPageClassNames = getClassNames(classNames);
