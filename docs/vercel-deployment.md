@@ -1,6 +1,27 @@
 # Vercel Deployment Setup
 
-This runbook configures Vercel hosting for `react-data-dashboard` across production, staging, and PR previews.
+This runbook documents the hosting and CI/CD configuration for `react-data-dashboard` across production, staging, and PR previews.
+
+## Architecture overview
+
+Deployments are gated through GitHub Actions — Vercel's automatic Git integration is **disconnected**. No code reaches Vercel without passing CI first.
+
+| Trigger | Workflow | Outcome |
+|---|---|---|
+| PR to `main` or `staging` | `.github/workflows/ci.yml` | Lint, typecheck, unit tests, build, e2e → preview deploy |
+| Push to `staging` | `.github/workflows/deploy-staging.yml` | Full validation + staging deploy |
+| Push to `main` | `.github/workflows/deploy-production.yml` | Full validation + production deploy |
+
+## Required GitHub secrets
+
+Add these in **GitHub → repo Settings → Secrets → Actions**:
+
+| Secret | Where to find it |
+|---|---|
+| `VERCEL_TOKEN` | vercel.com → Account Settings → Tokens |
+| `VERCEL_ORG_ID` | Run `vercel link` locally → `.vercel/project.json` → `orgId` |
+| `VERCEL_PROJECT_ID` | Run `vercel link` locally → `.vercel/project.json` → `projectId` |
+| `CHROMATIC_PROJECT_TOKEN` | Chromatic project settings (optional — skipped if unset) |
 
 ## RDDB-71: Neon + Vercel environment documentation
 
@@ -26,15 +47,23 @@ Use this checklist when closing the ticket:
 
 ## 1. Connect the repository
 
-1. In Vercel, click **Add New... -> Project**.
-2. Import `decodedcreative/react-data-dashboard`.
-3. Keep framework as **Next.js** (the repo also contains `vercel.json`).
+> **Note:** Vercel's automatic Git integration is disconnected. Deployments are triggered exclusively by GitHub Actions using the Vercel CLI. Do not re-enable auto-deploy in Vercel Project Settings → Git.
+
+To link the CLI locally (needed to obtain `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID`):
+
+```bash
+npm install -g vercel
+vercel login
+vercel link   # select the decodedcreative scope and existing project
+```
+
+The values are written to `.vercel/project.json` (gitignored). Copy `orgId` → `VERCEL_ORG_ID` and `projectId` → `VERCEL_PROJECT_ID` into GitHub secrets.
 
 ## 2. Configure production deployment
 
-1. In **Project Settings -> Git**, set **Production Branch** to `main`.
-2. In **Project Settings -> Domains**, add the production domain (if applicable).
-3. In **Project Settings -> Environment Variables**, add:
+1. In **Project Settings → Git**, set **Production Branch** to `main`.
+2. In **Project Settings → Domains**, add the production domain (if applicable).
+3. In **Project Settings → Environment Variables**, add:
    - `DATABASE_URL` for **Production** (production database connection string).
 
 ## 3. Configure staging deployment
@@ -42,39 +71,27 @@ Use this checklist when closing the ticket:
 Vercel staging is handled as a branch-targeted preview deployment:
 
 1. Create or use a long-lived `staging` branch.
-2. In **Project Settings -> Environment Variables**, add `DATABASE_URL` with target:
+2. In **Project Settings → Environment Variables**, add `DATABASE_URL` with target:
    - **Preview**
    - **Branch filter**: `staging`
 3. (Optional) Assign a stable staging domain to the latest `staging` deployment (for example `staging.<domain>`).
 
 ## 4. Configure PR preview deployments
 
-1. In **Project Settings -> Git**, ensure **Preview Deployments** are enabled.
-2. For any preview branch except `staging`, add a fallback preview `DATABASE_URL`:
+1. For any preview branch except `staging`, add a fallback preview `DATABASE_URL`:
    - target: **Preview**
    - no branch filter (or a wildcard filter matching non-staging previews).
-3. Open a PR and verify Vercel posts the preview URL to GitHub checks.
+2. Open a PR — CI will run validation and post the preview URL as a PR comment once all checks pass.
 
-## 5. Configure environment variables in CLI (optional)
+## 5. Branch-to-environment mapping
 
-If you prefer CLI:
+- `main` → **Production** deployment + production `DATABASE_URL`
+- `staging` → **Preview** deployment + branch-filtered staging `DATABASE_URL`
+- `feature/*` / PR branches → **Preview** deployment + default preview `DATABASE_URL`
 
-```bash
-vercel link
-vercel env add DATABASE_URL production
-vercel env add DATABASE_URL preview
-vercel env add DATABASE_URL preview --git-branch staging
-```
+## 6. Post-setup validation checklist
 
-## 6. Verify branch-to-environment mapping
-
-- `main` -> **Production** deployment + production `DATABASE_URL`
-- `staging` -> **Preview** deployment + branch-filtered staging `DATABASE_URL`
-- `feature/*` / PR branches -> **Preview** deployment + default preview `DATABASE_URL`
-
-## 7. Post-setup validation checklist
-
-- Push to `main` and confirm a production deployment succeeds.
-- Push to `staging` and confirm staging URL is updated.
-- Open a PR and confirm preview deployment is created.
-- Check app health page or landing page and verify server reads succeed (proves `DATABASE_URL` is present).
+- Push to `main` and confirm a production deployment succeeds in the Actions tab.
+- Push to `staging` and confirm the staging deployment URL is updated.
+- Open a PR and confirm the preview URL is posted as a PR comment once CI passes.
+- Check the app and verify server reads succeed (proves `DATABASE_URL` is present).
