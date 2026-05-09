@@ -78,6 +78,12 @@ jobs:
 
       - name: Deploy to staging
         run: |
+          for required in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!required:-}" ]; then
+              echo "Missing required secret: ${required}"
+              exit 1
+            fi
+          done
           url=$(vercel deploy --yes --token="${VERCEL_TOKEN}")
           echo "Staging deployment: ${url}" >> "$GITHUB_STEP_SUMMARY"
         env:
