@@ -165,15 +165,17 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+        run: npm install --global vercel@53.2.0
 
       - name: Deploy preview to Vercel
         id: deploy
         run: |
-          if [ -z "${VERCEL_TOKEN:-}" ]; then
-            echo 'VERCEL_TOKEN not set; skipping preview deploy.'
-            exit 0
-          fi
+          for required in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!required:-}" ]; then
+              echo "${required} not set; skipping preview deploy."
+              exit 0
+            fi
+          done
           url=$(vercel deploy --yes --token="${VERCEL_TOKEN}")
           echo "url=${url}" >> "$GITHUB_OUTPUT"
         env:
@@ -188,7 +190,7 @@ jobs:
           script: |
             const marker = '<!-- preview-deploy-url -->'
             const body = `${marker}\n### Preview deployment\n\n${{ steps.deploy.outputs.url }}`
-            const { data: comments } = await github.rest.issues.listComments({
+            const comments = await github.paginate(github.rest.issues.listComments, {
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
