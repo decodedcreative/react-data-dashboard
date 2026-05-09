@@ -85,9 +85,9 @@ Vercel staging is handled as a branch-targeted preview deployment:
 
 ## 5. Branch-to-environment mapping
 
-- `main` → **Production** deployment + production `DATABASE_URL`
-- `staging` → **Preview** deployment + branch-filtered staging `DATABASE_URL`
-- `feature/*` / PR branches → **Preview** deployment + default preview `DATABASE_URL`
+- `main` -> **Production** deployment + production `DATABASE_URL`
+- `staging` -> **Preview** deployment + branch-filtered staging `DATABASE_URL`
+- `feature/*` / PR branches -> **Preview** deployment + default preview `DATABASE_URL`
 
 ## 6. Post-setup validation checklist
 
