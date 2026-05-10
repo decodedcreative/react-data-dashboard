@@ -51,7 +51,7 @@ Hosted variables are managed in **Vercel → Project Settings → Environment Va
 
 ## Environment promotion path
 
-```
+```text
 .env.local (local)
     ↓
 Preview DATABASE_URL (PR previews → Vercel)
