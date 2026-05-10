@@ -13,8 +13,50 @@ React + TypeScript + **Next.js** (App Router) for a data-heavy trading-style das
 
 - Vercel project configuration: `vercel.json`
 - Environment variable template: `.env.example`
+- Environment variable strategy: `docs/environment-variables.md`
 - Full setup runbook (production/staging/PR previews): `docs/vercel-deployment.md`
 - CI guard for deployment contract: `npm run verify:vercel-config`
+
+### Hosting URLs
+
+| Environment | URL |
+|---|---|
+| Production | https://rddb.decodedcreative.co.uk |
+| Staging | https://staging-rddb.decodedcreative.co.uk |
+| PR previews | Posted as a PR comment by the CI workflow |
+
+### Branching strategy
+
+| Branch | Purpose |
+|---|---|
+| `main` | Production — every merge triggers a production deploy |
+| `staging` | Stable staging — every merge triggers a staging deploy |
+| `feature/*` | Feature work — open a PR to `main` or `staging` to trigger CI and a preview deploy |
+
+PRs to `main` can be opened directly from a feature branch. The `staging` branch exists for pre-production soak testing and is optional for day-to-day work on this project.
+
+### Deployment flow
+
+All deployments are gated through GitHub Actions. Vercel's automatic Git integration is disconnected — nothing reaches Vercel without passing CI first.
+
+```
+feature branch → PR → lint + typecheck + unit tests + build + e2e → preview deploy
+                       ↓ merge to staging
+              validate (same steps) → staging deploy (staging-rddb.decodedcreative.co.uk)
+                       ↓ merge to main
+              validate (same steps) → production deploy (rddb.decodedcreative.co.uk)
+```
+
+### Required secrets
+
+These must be set in **GitHub → repo Settings → Secrets → Actions**:
+
+| Secret | Required | Purpose |
+|---|---|---|
+| `VERCEL_TOKEN` | Yes | Authenticates the Vercel CLI in CI |
+| `VERCEL_ORG_ID` | Yes | Identifies the Vercel team |
+| `VERCEL_PROJECT_ID` | Yes | Identifies the Vercel project |
+| `CHROMATIC_PROJECT_TOKEN` | No | Publishes visual snapshots to Chromatic (skipped if unset) |
 
 ### Local Postgres (Docker Compose)
 
@@ -103,3 +145,29 @@ After `npm install`, the **`prepare`** script installs hooks from `.husky/`.
 | **pre-push**   | `npm run verify` (lint + typecheck + tests).                                                                                                          |
 
 To skip hooks in an emergency only: `git commit --no-verify` or `git push --no-verify`. Prefer fixing the underlying issue instead of bypassing checks.
+
+## Troubleshooting
+
+**`DATABASE_URL environment variable is not set`**
+You haven't created `.env.local` yet, or it's missing `DATABASE_URL`. Run `cp .env.example .env.local` and make sure the file is populated.
+
+**`docker compose up -d` fails / Postgres won't start**
+Another process is likely using port 5433. Run `lsof -i :5433` to identify it. Alternatively, change the host port in `docker-compose.yml` and update `DATABASE_URL` in `.env.local` to match.
+
+**`prisma migrate deploy` fails with connection error**
+The Postgres container isn't running. Run `docker compose up -d postgres` first.
+
+**`Error: P1001` (Prisma can't reach database)**
+Check `DATABASE_URL` in `.env.local` matches the Docker Compose service — host should be `127.0.0.1`, port `5433`.
+
+**Playwright e2e tests fail locally with "browser not found"**
+Run `npm run test:e2e:install` to install the Chromium binary.
+
+**Port 3000 already in use**
+Set `PORT=3001` (or any free port) in `.env.local` and update `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3001` to match.
+
+**CI deploy step fails with "Missing required secret"**
+One of `VERCEL_TOKEN`, `VERCEL_ORG_ID`, or `VERCEL_PROJECT_ID` is not set in GitHub Actions secrets. See the Required secrets section above.
+
+**Vercel deploy succeeds but app can't connect to the database**
+`DATABASE_URL` is missing or misconfigured for that Vercel environment. Check Project Settings → Environment Variables in Vercel and confirm the correct target (Production / Preview / branch filter) is set. See `docs/vercel-deployment.md`.
