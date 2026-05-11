@@ -146,7 +146,15 @@ export async function waitForPageSettled(
 
   if (hasGrid) {
     await page.locator('.ag-root-wrapper').waitFor({ state: 'visible' });
-    await page.locator('.ag-row').first().waitFor({ state: 'visible' });
+    // Wait for the grid body to finish its first render pass — either at
+    // least one row is mounted (populated state) or AG Grid's default
+    // "no rows" overlay is showing (legitimately empty state). Without this
+    // the implicit end-of-test snapshot can capture the grid mid-mount with
+    // an empty row container even when data is present.
+    await page
+      .locator('.ag-row, .ag-overlay-no-rows-center')
+      .first()
+      .waitFor({ state: 'visible' });
   }
 
   // Small buffer for any final CSS paint/layout settle that `networkidle`
