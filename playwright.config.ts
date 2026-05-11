@@ -19,11 +19,28 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+    // Visual stability — keep these in sync with the app's display locale/timezone
+    // (`DISPLAY_LOCALE` / `DISPLAY_TIME_ZONE` in src/features/trades/lib/formatters).
+    viewport: { width: 1280, height: 720 },
+    colorScheme: 'light',
+    locale: 'en-GB',
+    timezoneId: 'UTC',
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          // Reduce cross-platform font rendering variation (Linux CI vs macOS dev).
+          // Not a complete fix — a bundled web font is the long-term solution.
+          args: [
+            '--font-render-hinting=none',
+            '--disable-font-subpixel-positioning',
+            '--disable-lcd-text',
+          ],
+        },
+      },
     },
   ],
   ...(useExternalBaseURL
