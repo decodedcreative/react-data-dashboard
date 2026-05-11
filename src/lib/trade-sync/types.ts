@@ -35,14 +35,13 @@ export interface TradeProvider {
 }
 
 /**
- * Aggregate counters returned by a sync run. `skipped` covers rows the
- * provider chose not to emit (e.g. orders without a usable price). `errors`
- * counts upserts that threw — the orchestrator continues past individual
- * failures so one bad row does not abort the whole run.
+ * Aggregate counters returned by a sync run. `fetched` is the number of rows
+ * the provider yielded (post any internal skips — providers may drop rows
+ * they can't map). `errors` counts upserts that threw — the orchestrator
+ * continues past individual failures so one bad row does not abort the run.
  */
 export interface SyncResult {
   fetched: number;
   upserted: number;
-  skipped: number;
   errors: number;
 }
