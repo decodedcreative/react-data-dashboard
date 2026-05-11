@@ -1,4 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
+import { waitForPageSettled } from '../visual-stability';
 
 export class TradesPage {
   readonly page: Page;
@@ -15,6 +16,7 @@ export class TradesPage {
 
   async goto() {
     await this.page.goto('/trades');
+    await waitForPageSettled(this.page, { hasGrid: true });
   }
 
   async openAaplTrade() {
@@ -23,5 +25,6 @@ export class TradesPage {
       this.page.waitForURL('**/trades/TRD-001'),
       this.aaplLink.click(),
     ]);
+    await waitForPageSettled(this.page);
   }
 }

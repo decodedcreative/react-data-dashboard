@@ -1,4 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
+import { waitForPageSettled } from '../visual-stability';
 
 export class AboutPage {
   readonly page: Page;
@@ -11,5 +12,6 @@ export class AboutPage {
 
   async goto() {
     await this.page.goto('/about');
+    await waitForPageSettled(this.page);
   }
 }
