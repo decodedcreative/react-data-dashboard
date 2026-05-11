@@ -2,17 +2,21 @@
 
 The trades displayed in the dashboard come from one of two sources:
 
-| Source   | Where it lives                                     | Used for                                                                     |
-| -------- | -------------------------------------------------- | ---------------------------------------------------------------------------- |
-| `seed`   | `prisma/seed.mjs`                                  | Fixed fixtures (`TRD-001`, `TRD-002`) used by unit / integration / e2e tests |
-| `alpaca` | [Alpaca paper trading API](https://alpaca.markets) | Real order history pulled by `npm run sync:trades`                           |
+| Source   | Where it lives                                     | Used for                                                                                                                                 |
+| -------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `seed`   | `e2e/fixtures/test-trades.ts`                      | Test fixtures (`TRD-001`, `TRD-002`) inserted automatically by Playwright's global setup. **Test infrastructure only** — not for dev use |
+| `alpaca` | [Alpaca paper trading API](https://alpaca.markets) | Real order history pulled by `npm run sync:trades`. The only "real" data path                                                            |
 
 Both coexist in the same `Trade` table, distinguished by the `source` column. The two operations are kept isolated:
 
-- `npm run db:seed` only touches `source = 'seed'` rows
+- `e2e/global-setup.ts` only upserts `source = 'seed'` rows (keyed on `id`)
 - `npm run sync:trades` only upserts `source = 'alpaca'` rows (keyed on `externalId`)
 
 You can re-run either as often as you like without losing the other.
+
+> **Why no `db:seed` script?** Before the Alpaca integration the project used `npm run db:seed` to insert dev data. Now that real trades come from Alpaca, the only purpose of seed data is to give e2e tests deterministic IDs to navigate to (`/trades/TRD-001` etc.). That responsibility now lives entirely in `e2e/`, where it belongs.
+
+> **Why two Postgres containers?** The dev DB on port 5433 owns your synced Alpaca data — running `npm run dev` reads from it. The test DB on port 5434 is owned by Playwright, which wipes and re-seeds it on every e2e run. Without the split, running `npm run test:e2e` would trample any trades you'd synced. CI uses a single Postgres and points both URLs at it (no dev data to preserve).
 
 ---
 

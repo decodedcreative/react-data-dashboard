@@ -19,18 +19,18 @@ React + TypeScript + **Next.js** (App Router) for a data-heavy trading-style das
 
 ### Hosting URLs
 
-| Environment | URL |
-|---|---|
-| Production | https://rddb.decodedcreative.co.uk |
-| Staging | https://staging-rddb.decodedcreative.co.uk |
-| PR previews | Posted as a PR comment by the CI workflow |
+| Environment | URL                                        |
+| ----------- | ------------------------------------------ |
+| Production  | https://rddb.decodedcreative.co.uk         |
+| Staging     | https://staging-rddb.decodedcreative.co.uk |
+| PR previews | Posted as a PR comment by the CI workflow  |
 
 ### Branching strategy
 
-| Branch | Purpose |
-|---|---|
-| `main` | Production — every merge triggers a production deploy |
-| `staging` | Stable staging — every merge triggers a staging deploy |
+| Branch      | Purpose                                                                            |
+| ----------- | ---------------------------------------------------------------------------------- |
+| `main`      | Production — every merge triggers a production deploy                              |
+| `staging`   | Stable staging — every merge triggers a staging deploy                             |
 | `feature/*` | Feature work — open a PR to `main` or `staging` to trigger CI and a preview deploy |
 
 PRs to `main` can be opened directly from a feature branch. The `staging` branch exists for pre-production soak testing and is optional for day-to-day work on this project.
@@ -51,31 +51,42 @@ feature branch → PR → lint + typecheck + unit tests + build + e2e → previe
 
 These must be set in **GitHub → repo Settings → Secrets → Actions**:
 
-| Secret | Required | Purpose |
-|---|---|---|
-| `VERCEL_TOKEN` | Yes | Authenticates the Vercel CLI in CI |
-| `VERCEL_ORG_ID` | Yes | Identifies the Vercel team |
-| `VERCEL_PROJECT_ID` | Yes | Identifies the Vercel project |
-| `CHROMATIC_PROJECT_TOKEN` | No | Publishes visual snapshots to Chromatic (skipped if unset) |
+| Secret                    | Required | Purpose                                                    |
+| ------------------------- | -------- | ---------------------------------------------------------- |
+| `VERCEL_TOKEN`            | Yes      | Authenticates the Vercel CLI in CI                         |
+| `VERCEL_ORG_ID`           | Yes      | Identifies the Vercel team                                 |
+| `VERCEL_PROJECT_ID`       | Yes      | Identifies the Vercel project                              |
+| `CHROMATIC_PROJECT_TOKEN` | No       | Publishes visual snapshots to Chromatic (skipped if unset) |
 
 ### Local Postgres (Docker Compose)
 
-- Start Postgres: `docker compose up -d postgres`
-- Stop Postgres: `docker compose stop postgres`
-- Reset database volume: `docker compose down -v` (warning: removes all project volumes, not just Postgres data)
-- Inspect service status: `docker compose ps`
-- Inspect logs: `docker compose logs -f postgres`
+Two separate Postgres containers run side by side so e2e tests can wipe-and-reseed their DB without touching real data you've synced via `npm run sync:trades`. CI uses a single Postgres service and points both URLs at it (no dev data to preserve).
 
-Local connection string:
+| Container        | Port   | Purpose                                                                                          |
+| ---------------- | ------ | ------------------------------------------------------------------------------------------------ |
+| `postgres` (dev) | `5433` | Used by `npm run dev` and `npm run sync:trades` — owns your synced Alpaca data                   |
+| `postgres-test`  | `5434` | Used by `npm run test:e2e` — Playwright's `global-setup.ts` wipes and re-seeds this on every run |
 
-`postgresql://postgres:postgres@127.0.0.1:5433/react_data_dashboard?schema=public`
+- Start both: `docker compose up -d`
+- Start one: `docker compose up -d postgres` or `docker compose up -d postgres-test`
+- Stop: `docker compose stop`
+- Reset all volumes: `docker compose down -v` (warning: removes all project volumes)
+- Inspect: `docker compose ps`, `docker compose logs -f postgres`
+
+Connection strings:
+
+- Dev: `postgresql://postgres:postgres@127.0.0.1:5433/react_data_dashboard?schema=public`
+- Test: `postgresql://postgres:postgres@127.0.0.1:5434/react_data_dashboard?schema=public`
 
 ### Prisma basics
 
 - Generate client from schema: `npm run db:generate`
-- Apply local migrations: `npm run db:migrate`
-- Seed starter data: `npm run db:seed`
-- Open Prisma Studio: `npm run db:studio`
+- Apply migrations to dev DB: `npm run db:migrate`
+- Apply migrations to test DB: `npm run db:migrate:test`
+- Sync real trades from Alpaca paper: `npm run sync:trades` (see [docs/data-sync.md](docs/data-sync.md))
+- Open Prisma Studio (dev DB): `npm run db:studio`
+
+> Test fixtures (`TRD-001` / `TRD-002`) live in `e2e/fixtures/test-trades.ts` and are inserted into the test DB automatically by `e2e/global-setup.ts` before every e2e run. There is no longer a `db:seed` script — for real local data, run `sync:trades`.
 
 ### Architecture notes
 

@@ -8,7 +8,9 @@
  *
  * Exits non-zero if any individual row failed to upsert.
  */
-import 'dotenv/config';
+// MUST be the first import — populates process.env before @lib/db/prisma
+// reads DATABASE_URL at import time.
+import '@lib/env/load-local';
 import { prisma } from '@lib/db/prisma';
 import { syncTrades } from '@lib/trade-sync';
 import { createAlpacaProvider } from '@lib/trade-sync/providers/alpaca';
