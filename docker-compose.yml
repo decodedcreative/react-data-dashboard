@@ -1,8 +1,11 @@
 services:
+  # Development database — receives data from `npm run sync:trades`, used by
+  # `npm run dev`. Not touched by e2e tests, so synced Alpaca data is safe
+  # while you run `npm run test:e2e` in parallel.
   postgres:
     image: postgres:16
     ports:
-      - "127.0.0.1:5433:5432"
+      - '127.0.0.1:5433:5432'
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
@@ -12,8 +15,32 @@ services:
     healthcheck:
       test:
         [
-          "CMD-SHELL",
-          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-react_data_dashboard}",
+          'CMD-SHELL',
+          'pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-react_data_dashboard}',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  # E2E test database — owned by Playwright. Wiped and re-seeded by
+  # `e2e/global-setup.ts` before every test run. Keeps dev data isolated
+  # from test runs and lets specs assume a known state.
+  postgres-test:
+    image: postgres:16
+    ports:
+      - '127.0.0.1:5434:5432'
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-react_data_dashboard}
+    volumes:
+      - postgres-test-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-react_data_dashboard}',
         ]
       interval: 10s
       timeout: 5s
@@ -22,3 +49,4 @@ services:
 
 volumes:
   postgres-data:
+  postgres-test-data:

@@ -36,7 +36,7 @@ Chromatic captures snapshot archives for every Playwright test, so non-determini
 ### What's controlled
 
 - **Clock** — frozen to `FROZEN_NOW` (`2026-05-11T09:00:00Z`) via `page.clock.install({ time })` before navigation. Anything that calls `Date.now()` / `new Date()` in the browser sees this fixed time.
-- **Data** — `/api/trades` and `/api/trades/*` are intercepted with `page.route()` and return the constants in `MOCK_TRADES` / `MOCK_TRADE_TRD_001`. **These must stay in sync with `prisma/seed.mjs`** — the trades pages are SSR and the server-side DB fetch is not intercepted, so the seed is still the source of truth for the initial HTML. The route mocks guard against any client-side refetch drift.
+- **Data** — `/api/trades` and `/api/trades/*` are intercepted with `page.route()` and return values sourced from `e2e/fixtures/test-trades.ts`. The same fixture module is used by `global-setup.ts` to insert the rows into Postgres before tests run, so the DB-backed SSR render and the client-side mock can never drift apart. The trades pages are SSR — the server-side DB fetch is not intercepted, so the fixtures in `test-trades.ts` are the source of truth for the initial HTML.
 - **Animations** — disabled globally (incl. AG Grid's `animateRows`) via CSS injected with `addInitScript` before the first paint.
 - **Viewport / locale / timezone / colour scheme** — pinned in `playwright.config.ts` (`1280×720`, `en-GB`, `UTC`, `light`) to match the app's display locale and timezone.
 - **Font rendering** — Chromium launched with `--font-render-hinting=none`, `--disable-font-subpixel-positioning`, `--disable-lcd-text` to reduce cross-platform variation. This mitigates but does not fully solve OS font differences between Linux CI and macOS dev; a bundled web font would be the complete fix.
@@ -52,9 +52,9 @@ Chromatic captures snapshot archives for every Playwright test, so non-determini
 - Use `takeNamedChromaticSnapshot()` from `chromatic-helpers.ts`.
 - Take it only after a navigation helper that includes `waitForPageSettled` (or call `waitForPageSettled` yourself first).
 
-### When changing seed data
+### When changing fixture data
 
-- Update `MOCK_TRADES` / `MOCK_TRADE_TRD_001` in `e2e/visual-stability.ts` to match. The two are coupled by convention.
+- Edit `e2e/fixtures/test-trades.ts` — that one module feeds both the DB rows inserted by `global-setup.ts` and the route mocks in `visual-stability.ts`, so the two stay coupled by construction rather than convention.
 
 ### Validating stability
 

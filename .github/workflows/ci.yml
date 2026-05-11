@@ -31,6 +31,9 @@ jobs:
           --health-retries 5
     env:
       DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/react_data_dashboard?schema=public
+      # CI has no dev data to preserve, so both DBs point at the same
+      # service. Locally these resolve to different containers (5433 vs 5434).
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/react_data_dashboard?schema=public
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -86,6 +89,9 @@ jobs:
           --health-retries 5
     env:
       DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/react_data_dashboard?schema=public
+      # CI has no dev data to preserve, so both DBs point at the same
+      # service. Locally these resolve to different containers (5433 vs 5434).
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/react_data_dashboard?schema=public
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -108,8 +114,8 @@ jobs:
       - name: Apply Prisma migrations
         run: npx prisma migrate deploy
 
-      - name: Seed database
-        run: npm run db:seed
+      # Fixture data for e2e tests is inserted by Playwright's globalSetup
+      # (see e2e/global-setup.ts). No separate seed step is required.
 
       - name: Cache Playwright browsers
         id: playwright-cache
