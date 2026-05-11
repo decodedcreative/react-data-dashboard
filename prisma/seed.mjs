@@ -6,9 +6,13 @@ import { Pool } from 'pg';
 const adapter = new PrismaPg(new Pool({ connectionString: process.env.DATABASE_URL }));
 const prisma = new PrismaClient({ adapter });
 
+// Fixture trades used by integration/e2e tests. These rows are scoped to
+// `source = 'seed'` so the sync script (which writes `source = 'alpaca'`)
+// can run alongside them without either side stomping the other.
 const seedTrades = [
   {
     id: 'TRD-001',
+    source: 'seed',
     symbol: 'AAPL',
     side: 'buy',
     quantity: 120,
@@ -19,6 +23,7 @@ const seedTrades = [
   },
   {
     id: 'TRD-002',
+    source: 'seed',
     symbol: 'TSLA',
     side: 'sell',
     quantity: 50,
@@ -30,9 +35,10 @@ const seedTrades = [
 ];
 
 async function main() {
-  await prisma.trade.deleteMany();
+  // Only reset seed-sourced rows — never touch rows synced from Alpaca.
+  await prisma.trade.deleteMany({ where: { source: 'seed' } });
   await prisma.trade.createMany({ data: seedTrades });
-  console.log(`Seeded ${seedTrades.length} trades.`);
+  console.log(`Seeded ${seedTrades.length} fixture trades (source=seed).`);
 }
 
 main()
@@ -43,4 +49,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
