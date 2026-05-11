@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isoTimestamp, numericString } from '../../../shared/zod-helpers';
 
 /**
  * Zod schemas describing Alpaca's external Trading API response shapes.
@@ -12,7 +13,7 @@ import { z } from 'zod';
  *   Alpaca emits microsecond precision which is outside RFC 3339's grammar.
  *   We validate via `new Date(...)` and assert parse-ability.
  *
- * Reference fixture: ./__fixtures__/orders-real.json (sampled from the
+ * Reference fixture: ../__fixtures__/orders-sample.json (sampled from the
  * paper-trading endpoint and committed for reproducibility).
  */
 
@@ -42,23 +43,9 @@ export type AlpacaOrderStatus = z.infer<typeof AlpacaOrderStatusSchema>;
 export const AlpacaSideSchema = z.enum(['buy', 'sell']);
 export type AlpacaSide = z.infer<typeof AlpacaSideSchema>;
 
-// Numeric string — e.g. "184.52", "120", "0". Strict pattern so non-numeric
-// strings fail loudly. Negative numbers are not expected from Alpaca but
-// permitted to avoid spurious failures on edge-case fields.
-const numericString = z.string().regex(/^-?\d+(\.\d+)?$/);
-
-// ISO-8601 with optional fractional seconds and Z/offset suffix. Alpaca uses
-// up to microsecond precision (6 fractional digits) which RFC 3339's grammar
-// strictly forbids — we accept it pragmatically and rely on Date parsing.
-const isoTimestamp = z
-  .string()
-  .refine((s) => !Number.isNaN(new Date(s).getTime()), {
-    message: 'invalid ISO-8601 timestamp',
-  });
-
 /**
  * Strict schema for a single Alpaca order. Fields enumerated from a real
- * paper-trading response (see __fixtures__/orders-real.json). If Alpaca
+ * paper-trading response (see __fixtures__/orders-sample.json). If Alpaca
  * adds new fields in production this will throw — that's intentional.
  */
 export const AlpacaOrderSchema = z

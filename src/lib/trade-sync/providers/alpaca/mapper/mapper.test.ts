@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import realFixture from './__fixtures__/orders-real.json';
-import { AlpacaOrdersResponseSchema, type AlpacaOrder } from './schemas';
+import sampleFixture from '../__fixtures__/orders-sample.json';
+import { AlpacaOrdersResponseSchema, type AlpacaOrder } from '../schemas';
 import { mapAlpacaOrderToTrade, mapAlpacaStatus } from './mapper';
 
 const TRADER = 'James Howell';
@@ -77,8 +77,8 @@ describe('mapAlpacaStatus', () => {
 });
 
 describe('mapAlpacaOrderToTrade', () => {
-  it('maps the real fixture without errors and respects skip logic', () => {
-    const orders = AlpacaOrdersResponseSchema.parse(realFixture);
+  it('maps the sample fixture without errors and respects skip logic', () => {
+    const orders = AlpacaOrdersResponseSchema.parse(sampleFixture);
     const mapped = orders.map((o) =>
       mapAlpacaOrderToTrade(o, { trader: TRADER })
     );

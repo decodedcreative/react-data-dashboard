@@ -1,6 +1,6 @@
 import type { TradeStatus } from '@prisma/client';
-import type { MappedTrade } from '../../types';
-import type { AlpacaOrder, AlpacaOrderStatus } from './schemas';
+import type { MappedTrade } from '../../../types';
+import type { AlpacaOrder, AlpacaOrderStatus } from '../schemas';
 
 /**
  * Status mapping is exhaustive — every value in AlpacaOrderStatusSchema must

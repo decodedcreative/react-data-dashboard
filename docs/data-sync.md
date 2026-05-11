@@ -131,7 +131,7 @@ The Alpaca external schema in [`schemas.ts`](../src/lib/trade-sync/providers/alp
 
 To accept the new field, add it to `AlpacaOrderSchema` (and the mapper if it should affect the domain).
 
-The reference fixture under [`__fixtures__/orders-real.json`](../src/lib/trade-sync/providers/alpaca/__fixtures__/orders-real.json) is captured from a real paper-trading response and committed for reproducibility — schema tests parse it as a smoke check.
+The reference fixture under [`__fixtures__/orders-sample.json`](../src/lib/trade-sync/providers/alpaca/__fixtures__/orders-sample.json) is captured from a paper-trading response and committed for reproducibility — schema tests parse it as a smoke check.
 
 ---
 

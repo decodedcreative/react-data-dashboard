@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import realFixture from './__fixtures__/orders-real.json';
+import sampleFixture from '../__fixtures__/orders-sample.json';
 import { AlpacaOrderSchema, AlpacaOrdersResponseSchema } from './schemas';
 
 describe('AlpacaOrdersResponseSchema', () => {
-  it('parses the real paper-trading response fixture', () => {
-    const result = AlpacaOrdersResponseSchema.safeParse(realFixture);
+  it('parses the paper-trading sample fixture', () => {
+    const result = AlpacaOrdersResponseSchema.safeParse(sampleFixture);
     if (!result.success) {
       // Surface the first issue for easier debugging when this fails.
       console.error(result.error.issues.slice(0, 3));
@@ -14,7 +14,7 @@ describe('AlpacaOrdersResponseSchema', () => {
 });
 
 describe('AlpacaOrderSchema', () => {
-  const sample = (realFixture as Array<Record<string, unknown>>)[0];
+  const sample = (sampleFixture as Array<Record<string, unknown>>)[0];
 
   it('rejects unknown keys (strict mode)', () => {
     const polluted = { ...sample, unexpected_field: 'oops' };

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import realFixture from './__fixtures__/orders-real.json';
+import sampleFixture from '../__fixtures__/orders-sample.json';
 import { AlpacaApiError, createAlpacaClient } from './client';
-import type { AlpacaConfig } from './config';
+import type { AlpacaConfig } from '../config';
 
 const config: AlpacaConfig = {
   baseUrl: 'https://paper-api.alpaca.markets',
@@ -20,11 +20,11 @@ function jsonResponse(body: unknown, init: ResponseInit = {}): Response {
 
 describe('createAlpacaClient', () => {
   it('sends auth headers and parses a successful response', async () => {
-    const fetchImpl = vi.fn(async () => jsonResponse(realFixture));
+    const fetchImpl = vi.fn(async () => jsonResponse(sampleFixture));
     const client = createAlpacaClient(config, fetchImpl);
     const orders = await client.listOrders({ status: 'all', limit: 100 });
 
-    expect(orders).toHaveLength((realFixture as Array<unknown>).length);
+    expect(orders).toHaveLength((sampleFixture as Array<unknown>).length);
 
     const [url, init] = fetchImpl.mock.calls[0] as unknown as [
       string,
@@ -49,7 +49,7 @@ describe('createAlpacaClient', () => {
   it('throws on schema drift (unknown field in response)', async () => {
     const polluted = [
       {
-        ...(realFixture as Array<Record<string, unknown>>)[0],
+        ...(sampleFixture as Array<Record<string, unknown>>)[0],
         unexpected_field: 'oops',
       },
     ];

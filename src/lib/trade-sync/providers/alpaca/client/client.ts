@@ -1,5 +1,5 @@
-import type { AlpacaConfig } from './config';
-import { AlpacaOrdersResponseSchema, type AlpacaOrder } from './schemas';
+import type { AlpacaConfig } from '../config';
+import { AlpacaOrdersResponseSchema, type AlpacaOrder } from '../schemas';
 
 /**
  * Thin HTTP client over Alpaca's Trading API. Handles auth header injection
