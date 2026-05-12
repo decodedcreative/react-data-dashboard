@@ -36,7 +36,7 @@
     "ag-grid-community": "^35.2.1",
     "ag-grid-react": "^35.2.1",
     "class-variance-authority": "^0.7.1",
-    "next": "^15.5.15",
+    "next": "^15.5.18",
     "pg": "^8.20.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
