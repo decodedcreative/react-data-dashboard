@@ -1,8 +1,8 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { toTradeDetailRows } from '@features/trades/lib';
 import { getTradeByIdFromDb } from '@features/trades/server/trades.db';
 import { getClassNames } from '@lib/get-class-names';
+import { BackToTradesLink } from './back-to-trades-link';
 import classNames from './page.styles';
 
 export const dynamic = 'force-dynamic';
@@ -38,9 +38,7 @@ const TradeDetailPage = async ({ params }: PageProps) => {
         ))}
       </section>
       <p className={tradeDetailClassNames.backLinkWrap}>
-        <Link href="/trades" className={tradeDetailClassNames.backLink}>
-          ← Back to trades
-        </Link>
+        <BackToTradesLink />
       </p>
     </main>
   );

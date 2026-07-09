@@ -29,6 +29,9 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@jigsaw-ds/design-system": "^0.1.0",
+    "@jigsaw-ds/theme-default": "^0.1.0",
+    "@jigsaw-ds/tokens": "^0.1.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@tanstack/react-query": "^5.99.2",

@@ -1,3 +1,17 @@
 @import 'tailwindcss';
+@import '@jigsaw-ds/tokens/tailwind-theme.css';
+@import '@jigsaw-ds/design-system/tailwind.css';
+
+@custom-variant dark (&:is([data-theme="dark"] *));
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 /* Use @layer base, @theme, or component styles as the design system grows. */
