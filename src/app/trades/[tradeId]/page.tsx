@@ -42,6 +42,6 @@ const TradeDetailPage = async ({ params }: PageProps) => {
       </p>
     </main>
   );
-}
+};
 
 export default TradeDetailPage;
