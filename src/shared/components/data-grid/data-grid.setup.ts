@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  CellStyleModule,
   ClientSideRowModelModule,
   ModuleRegistry,
   NumberFilterModule,
@@ -49,6 +50,7 @@ export const initDataGrid = () => {
 
   ModuleRegistry.registerModules([
     ClientSideRowModelModule,
+    CellStyleModule, // required by built-in `numericColumn` (`cellClass`)
     PaginationModule,
     TextFilterModule,
     NumberFilterModule,
