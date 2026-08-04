@@ -1,6 +1,6 @@
-'use client';
-
-import { Heading, LinkButton, Text } from '@jigsaw-ds/design-system';
+import { Heading } from '@jigsaw-ds/design-system/heading';
+import { LinkButton } from '@jigsaw-ds/design-system/link';
+import { Text } from '@jigsaw-ds/design-system/text';
 import { getClassNames } from '@lib/get-class-names';
 import classNames from './page.styles';
 

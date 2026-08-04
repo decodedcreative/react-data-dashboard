@@ -1,8 +1,8 @@
+import { Link } from '@jigsaw-ds/design-system/link';
 import { notFound } from 'next/navigation';
 import { toTradeDetailRows } from '@features/trades/lib';
 import { getTradeByIdFromDb } from '@features/trades/server/trades.db';
 import { getClassNames } from '@lib/get-class-names';
-import { BackToTradesLink } from './back-to-trades-link';
 import classNames from './page.styles';
 
 export const dynamic = 'force-dynamic';
@@ -38,7 +38,7 @@ const TradeDetailPage = async ({ params }: PageProps) => {
         ))}
       </section>
       <p className={tradeDetailClassNames.backLinkWrap}>
-        <BackToTradesLink />
+        <Link href="/trades">← Back to trades</Link>
       </p>
     </main>
   );

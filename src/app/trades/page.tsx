@@ -1,7 +1,7 @@
+import { Badge } from '@jigsaw-ds/design-system/badge';
 import { GridTrades } from '@features/trades/components/trades-grid';
 import { getTradesFromDb } from '@features/trades/server/trades.db';
 import { getClassNames } from '@lib/get-class-names';
-import { LiveBadge } from './live-badge';
 import classNames from './page.styles';
 
 export const dynamic = 'force-dynamic';
@@ -14,7 +14,7 @@ const TradesPage = async () => {
     <main className={tradesPageClassNames.component}>
       <header className={tradesPageClassNames.header}>
         <h1 className={tradesPageClassNames.title}>Trades</h1>
-        <LiveBadge />
+        <Badge variant="success">Live</Badge>
       </header>
       <GridTrades initialTrades={initialTrades} />
     </main>
