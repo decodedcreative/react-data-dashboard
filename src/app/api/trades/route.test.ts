@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Trade } from '@types';
+import { REQUEST_ID_HEADER } from '@lib/api/with-api-logging';
 import { GET } from './route';
 
 vi.mock('@features/trades/server/trades.db', () => ({
@@ -24,19 +25,19 @@ describe('GET /api/trades', () => {
     ];
     vi.mocked(getTradesFromDb).mockResolvedValue(trades);
 
-    const response = await GET();
+    const response = await GET(new Request('http://localhost/api/trades'), undefined);
 
     expect(response.status).toBe(200);
+    expect(response.headers.get(REQUEST_ID_HEADER)).toBeTruthy();
     await expect(response.json()).resolves.toEqual(trades);
   });
 
   it('returns 500 when fetching trades fails', async () => {
     vi.mocked(getTradesFromDb).mockRejectedValue(new Error('db down'));
 
-    const response = await GET();
+    const response = await GET(new Request('http://localhost/api/trades'), undefined);
 
     expect(response.status).toBe(500);
     await expect(response.json()).resolves.toEqual({ error: 'Failed to fetch trades' });
   });
 });
-
