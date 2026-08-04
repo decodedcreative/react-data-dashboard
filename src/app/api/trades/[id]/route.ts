@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getTradeByIdFromDb } from '@features/trades/server/trades.db';
+import { withApiLogging } from '@lib/api/with-api-logging';
 
 type RouteParams = {
   params: Promise<{ id: string }>;
 };
 
-export async function GET(_: Request, { params }: RouteParams) {
+export const GET = withApiLogging(async (_request: Request, { params }: RouteParams) => {
   try {
     const { id } = await params;
     const trade = await getTradeByIdFromDb(id);
@@ -18,5 +19,4 @@ export async function GET(_: Request, { params }: RouteParams) {
   } catch {
     return NextResponse.json({ error: 'Failed to fetch trade' }, { status: 500 });
   }
-}
-
+});
