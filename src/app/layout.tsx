@@ -1,4 +1,8 @@
 import type { Metadata } from 'next';
+import '@jigsaw-ds/tokens/shared/base.css';
+import '@jigsaw-ds/theme-default/base.css';
+import '@jigsaw-ds/theme-default/semantic-light.css';
+import '@jigsaw-ds/theme-default/semantic-dark.css';
 import './globals.css';
 import { Nav, NavLink } from '@shared/components/nav';
 import { Providers } from './providers';

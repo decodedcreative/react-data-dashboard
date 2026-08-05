@@ -1,4 +1,6 @@
-import Link from 'next/link';
+import { Heading } from '@jigsaw-ds/design-system/heading';
+import { LinkButton } from '@jigsaw-ds/design-system/link';
+import { Text } from '@jigsaw-ds/design-system/text';
 import { getClassNames } from '@lib/get-class-names';
 import classNames from './page.styles';
 
@@ -7,15 +9,11 @@ const HomePage = () => {
 
   return (
     <main className={homePageClassNames.component}>
-      <h1 className={homePageClassNames.title}>React Data Dashboard</h1>
-      <p className={homePageClassNames.paragraph}>
-        Browse executions, statuses, and related metrics.
-      </p>
-      <p className={homePageClassNames.paragraph}>
-        <Link href="/trades" className={homePageClassNames.link}>
-          View trades →
-        </Link>
-      </p>
+      <Heading as="h1">React Data Dashboard</Heading>
+      <Text as="p">Browse executions, statuses, and related metrics.</Text>
+      <LinkButton href="/trades" variant="primary">
+        View trades →
+      </LinkButton>
     </main>
   );
 };

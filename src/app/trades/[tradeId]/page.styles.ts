@@ -10,16 +10,6 @@ const classNames = {
   label: cva(['text-xs', 'text-neutral-600']),
   value: cva(['text-neutral-900']),
   backLinkWrap: cva(['mt-6']),
-  backLink: cva([
-    'underline-offset-2',
-    'text-neutral-900',
-    'hover:underline',
-    'focus-visible:rounded-sm',
-    'focus-visible:outline-none',
-    'focus-visible:ring-2',
-    'focus-visible:ring-neutral-400',
-    'focus-visible:ring-offset-2',
-  ]),
 };
 
 export default classNames;

@@ -1,4 +1,6 @@
-import Link from 'next/link';
+import { Heading } from '@jigsaw-ds/design-system/heading';
+import { Link } from '@jigsaw-ds/design-system/link';
+import { Text } from '@jigsaw-ds/design-system/text';
 import { getClassNames } from '@lib/get-class-names';
 import classNames from './page.styles';
 
@@ -7,19 +9,14 @@ const AboutPage = () => {
 
   return (
     <main className={aboutPageClassNames.component}>
-      <h1 className={aboutPageClassNames.title}>About</h1>
-      <p className={aboutPageClassNames.paragraph}>
+      <Heading as="h1">About</Heading>
+      <Text as="p">
         Product context and docs can live here. Main data views are under{' '}
-        <Link href="/trades" className={aboutPageClassNames.link}>
-          Trades
-        </Link>
-        .
-      </p>
-      <p className={aboutPageClassNames.paragraph}>
-        <Link href="/" className={aboutPageClassNames.link}>
-          ← Home
-        </Link>
-      </p>
+        <Link href="/trades">Trades</Link>.
+      </Text>
+      <Text as="p">
+        <Link href="/">← Home</Link>
+      </Text>
     </main>
   );
 };

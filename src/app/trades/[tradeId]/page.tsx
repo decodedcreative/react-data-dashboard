@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from '@jigsaw-ds/design-system/link';
 import { notFound } from 'next/navigation';
 import { toTradeDetailRows } from '@features/trades/lib';
 import { getTradeByIdFromDb } from '@features/trades/server/trades.db';
@@ -38,12 +38,10 @@ const TradeDetailPage = async ({ params }: PageProps) => {
         ))}
       </section>
       <p className={tradeDetailClassNames.backLinkWrap}>
-        <Link href="/trades" className={tradeDetailClassNames.backLink}>
-          ← Back to trades
-        </Link>
+        <Link href="/trades">← Back to trades</Link>
       </p>
     </main>
   );
-}
+};
 
 export default TradeDetailPage;
