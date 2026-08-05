@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { REQUEST_ID_HEADER } from '@lib/api/with-api-logging';
 import { GET } from './route';
 
 vi.mock('@features/trades/server/trades.db', () => ({
@@ -16,7 +17,7 @@ describe('GET /api/trades/[id]', () => {
     });
 
     expect(response.status).toBe(404);
+    expect(response.headers.get(REQUEST_ID_HEADER)).toBeTruthy();
     await expect(response.json()).resolves.toEqual({ error: 'Trade not found' });
   });
 });
-
