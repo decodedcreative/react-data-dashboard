@@ -6,6 +6,11 @@ import { SearchField } from '@jigsaw-ds/design-system/search-field';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getTrades, tradesKeys } from '@features/trades/client/trades.queries';
 import { TradesMetrics } from '@features/trades/components/trades-metrics';
+import {
+  buildTradesCsv,
+  downloadCsv,
+  tradesCsvFilename,
+} from '@features/trades/lib/export';
 import { useGetClassNames } from '@hooks/use-get-class-names';
 import { DataGrid } from '@shared/components/data-grid';
 import type { DataGridGetRowId } from '@shared/components/data-grid';
@@ -104,6 +109,14 @@ export const GridTrades = ({ initialTrades }: GridTradesProps) => {
       )
     : gridTrades;
 
+  // Naive: format every filtered row (including O(n²) VWAP / fill-rate scans)
+  // synchronously on the main thread. React cannot paint or handle input until
+  // the Blob is ready.
+  const handleExportCsv = () => {
+    const csv = buildTradesCsv(displayedTrades);
+    downloadCsv(tradesCsvFilename(), csv);
+  };
+
   return (
     <div className={gridTradesClassNames.component}>
       <TradesMetrics trades={displayedTrades} />
@@ -134,6 +147,9 @@ export const GridTrades = ({ initialTrades }: GridTradesProps) => {
         </div>
 
         <div className={gridTradesClassNames.controlsGroup}>
+          <Button variant="outline" size="sm" onPress={handleExportCsv}>
+            Export CSV
+          </Button>
           {isLiveFeedActive ? (
             <span className={gridTradesClassNames.liveIndicator}>
               <span className={gridTradesClassNames.liveDot} />
