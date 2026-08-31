@@ -3,6 +3,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { getTrades, tradesKeys } from '@features/trades/client/trades.queries';
+import { downloadCsv } from '@features/trades/lib/export';
 import type { Trade } from '@types';
 import type { GridTradesProps } from './trades.grid';
 import { GridTrades } from './trades.grid';
@@ -38,6 +39,15 @@ vi.mock('@features/trades/client/trades.queries', () => ({
   },
 }));
 
+vi.mock('@features/trades/lib/export', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@features/trades/lib/export')>();
+  return {
+    ...actual,
+    downloadCsv: vi.fn(),
+  };
+});
+
 const createTestQueryClient = () => {
   return new QueryClient({
     defaultOptions: { queries: { retry: false } },
@@ -70,6 +80,7 @@ describe('GridTrades', () => {
   beforeEach(() => {
     vi.mocked(getTrades).mockReset();
     vi.mocked(getTrades).mockImplementation(() => Promise.resolve(mockTrades));
+    vi.mocked(downloadCsv).mockReset();
   });
 
   it('renders trades in data grid after data loads', async () => {
@@ -123,6 +134,28 @@ describe('GridTrades', () => {
     expect(
       document.querySelector('[classnameoverrides], [classNameOverrides]')
     ).toBeNull();
+  });
+
+  it('exports the currently displayed trades as csv', async () => {
+    renderWithProvider();
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: 'Export CSV' })
+      ).toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Export CSV' }));
+
+    expect(vi.mocked(downloadCsv)).toHaveBeenCalledTimes(1);
+    const [filename, csv] = vi.mocked(downloadCsv).mock.calls[0] as [
+      string,
+      string,
+    ];
+    expect(filename).toMatch(/^trades-export-\d{4}-\d{2}-\d{2}\.csv$/);
+    expect(csv).toContain('TRD-001');
+    expect(csv).toContain('TRD-002');
+    expect(csv).toContain('James Howell');
   });
 
   it('filters trades when search input changes', async () => {
