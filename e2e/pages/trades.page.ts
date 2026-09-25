@@ -10,8 +10,13 @@ export class TradesPage {
   constructor(page: Page) {
     this.page = page;
     this.heading = page.getByRole('heading', { name: 'Trades' });
-    this.aaplLink = page.getByRole('link', { name: 'AAPL' });
-    this.tslaText = page.getByText('TSLA');
+    // Extra seed rows reuse AAPL/TSLA, so pin locators to the canonical trade ids.
+    this.aaplLink = page
+      .getByRole('row', { name: /TRD-001\b/ })
+      .getByRole('link', { name: 'AAPL' });
+    this.tslaText = page
+      .getByRole('row', { name: /TRD-002\b/ })
+      .getByText('TSLA', { exact: true });
   }
 
   async goto() {
