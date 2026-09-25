@@ -18,11 +18,24 @@ const mockTrades: Trade[] = [
     trader: 'James Howell',
     executedAt: '2026-04-24T10:15:00Z',
   },
+  {
+    id: 'TRD-002',
+    symbol: 'MSFT',
+    side: 'sell',
+    quantity: 80,
+    price: 420.1,
+    status: 'pending',
+    trader: 'Sarah Khan',
+    executedAt: null,
+  },
 ];
 
 vi.mock('@features/trades/client/trades.queries', () => ({
   getTrades: vi.fn(),
-  tradesKeys: { all: ['trades'] as const, detail: (id: string) => ['trades', id] as const },
+  tradesKeys: {
+    all: ['trades'] as const,
+    detail: (id: string) => ['trades', id] as const,
+  },
 }));
 
 const createTestQueryClient = () => {
@@ -75,6 +88,56 @@ describe('GridTrades', () => {
     expect(vi.mocked(getTrades)).toHaveBeenCalledTimes(1);
   });
 
+  it('toggles live feed state', async () => {
+    renderWithProvider();
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: 'Start Live Feed' })
+      ).toBeInTheDocument();
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Start Live Feed' })
+    );
+    expect(
+      screen.getByRole('button', { name: 'Stop Live Feed' })
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Streaming/)).toBeInTheDocument();
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Stop Live Feed' })
+    );
+    expect(
+      screen.getByRole('button', { name: 'Start Live Feed' })
+    ).toBeInTheDocument();
+  });
+
+  it('does not leak classNameOverrides onto the search field icon', async () => {
+    renderWithProvider();
+
+    await waitFor(() => {
+      expect(screen.getByRole('searchbox')).toBeInTheDocument();
+    });
+
+    expect(
+      document.querySelector('[classnameoverrides], [classNameOverrides]')
+    ).toBeNull();
+  });
+
+  it('filters trades when search input changes', async () => {
+    renderWithProvider();
+
+    await waitFor(() => {
+      expect(screen.getByRole('grid')).toBeInTheDocument();
+    });
+
+    const searchInput = screen.getByRole('searchbox');
+    await userEvent.type(searchInput, 'MSFT');
+
+    expect(screen.getByTestId('metric-total-trades')).toHaveTextContent('1');
+  });
+
   it('renders an empty-state message when no trades are returned', async () => {
     vi.mocked(getTrades).mockImplementation(() => Promise.resolve([]));
     renderWithProvider();
@@ -104,7 +167,9 @@ describe('GridTrades', () => {
     await failNextRefetch(queryClient);
 
     await waitFor(() => {
-      expect(screen.getByRole('status')).toHaveTextContent('Showing last known data');
+      expect(screen.getByRole('status')).toHaveTextContent(
+        'Showing last known data'
+      );
     });
     expect(screen.getByRole('grid')).toBeInTheDocument();
     expect(screen.queryByText('Failed to load trades')).not.toBeInTheDocument();
