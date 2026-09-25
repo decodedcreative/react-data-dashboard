@@ -13,6 +13,8 @@ const eslintConfig = [
   {
     ignores: [
       '.next/**',
+      '.worktrees/**',
+      '.claude/**',
       'dist/**',
       'coverage/**',
       'test-results/**',
