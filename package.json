@@ -34,6 +34,7 @@
     "@jigsaw-ds/tokens": "^0.3.1",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@sentry/nextjs": "^10.73.0",
     "@tanstack/react-query": "^5.99.2",
     "@tanstack/react-table": "^8.21.3",
     "ag-grid-community": "^35.2.1",
@@ -79,7 +80,9 @@
     "vitest": "^4.1.5"
   },
   "overrides": {
-    "@hono/node-server": "1.19.13"
+    "@hono/node-server": "1.19.13",
+    "@babel/core": "7.29.6",
+    "browserslist": "4.29.1"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
