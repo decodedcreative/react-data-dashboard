@@ -1,4 +1,8 @@
 import type { Page } from '@playwright/test';
+import {
+  TEST_TRADES_API_SHAPE,
+  TEST_TRADE_TRD_001,
+} from './fixtures/test-trades';
 
 /**
  * Visual-test stability primitives.
@@ -22,38 +26,16 @@ import type { Page } from '@playwright/test';
 export const FROZEN_NOW = new Date('2026-05-11T09:00:00Z');
 
 /**
- * Canonical mock data for `/api/trades`.
+ * Mock data for `/api/trades` — sourced from the shared e2e fixture module
+ * so the values returned by the route mock and the values inserted into the
+ * DB by `global-setup.ts` can never drift apart.
  *
- * MUST stay in sync with `prisma/seed.mjs` because the trades and trade-detail
- * pages are SSR — the server-side `getTradesFromDb()` call hits the real DB and
- * bypasses `page.route()`. This mock is a belt-and-braces guard for any client
- * refetch (React Query revalidation, focus refetch, etc.) so the snapshot
- * doesn't drift if the stale-time or fetching strategy changes.
+ * Used as a belt-and-braces guard for any client-side refetch (React Query
+ * revalidation, focus refetch, etc.) — the trades pages are SSR so the
+ * initial render is sourced from the DB directly.
  */
-export const MOCK_TRADES = [
-  {
-    id: 'TRD-001',
-    symbol: 'AAPL',
-    side: 'buy',
-    quantity: 120,
-    price: 184.52,
-    status: 'filled',
-    trader: 'James Howell',
-    executedAt: '2026-04-24T10:15:00.000Z',
-  },
-  {
-    id: 'TRD-002',
-    symbol: 'TSLA',
-    side: 'sell',
-    quantity: 50,
-    price: 171.25,
-    status: 'pending',
-    trader: 'Sarah Khan',
-    executedAt: null,
-  },
-] as const;
-
-export const MOCK_TRADE_TRD_001 = MOCK_TRADES[0];
+export const MOCK_TRADES = TEST_TRADES_API_SHAPE;
+export const MOCK_TRADE_TRD_001 = TEST_TRADE_TRD_001;
 
 /**
  * CSS injected via `addInitScript` to neutralise animations and transitions

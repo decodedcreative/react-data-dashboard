@@ -28,8 +28,15 @@ enum TradeStatus {
   cancelled
 }
 
+enum TradeSource {
+  seed
+  alpaca
+}
+
 model Trade {
   id         String      @id @default(cuid())
+  externalId String?     @unique
+  source     TradeSource @default(seed)
   symbol     String
   side       TradeSide
   quantity   Decimal     @db.Decimal(19, 8)
@@ -42,4 +49,5 @@ model Trade {
 
   @@index([symbol])
   @@index([executedAt])
+  @@index([source])
 }

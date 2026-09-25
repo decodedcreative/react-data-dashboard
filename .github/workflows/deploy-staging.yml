@@ -31,6 +31,9 @@ jobs:
           --health-retries 5
     env:
       DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/react_data_dashboard?schema=public
+      # E2E tests use TEST_DATABASE_URL; CI has no dev data to preserve so
+      # both point at the same Postgres service.
+      TEST_DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/react_data_dashboard?schema=public
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
@@ -66,8 +69,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Seed database
-        run: npm run db:seed
+      # Fixture data for e2e tests is inserted by Playwright's globalSetup
+      # (see e2e/global-setup.ts). No separate seed step is required.
 
       - name: Cache Playwright browsers
         id: playwright-cache
